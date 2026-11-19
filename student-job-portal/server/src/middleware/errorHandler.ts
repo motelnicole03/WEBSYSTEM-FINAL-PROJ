@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { MulterError } from 'multer';
 import { ZodError } from 'zod';
 import { env } from '../config/env';
 import { HttpError } from '../utils/httpError';
@@ -14,6 +15,11 @@ export function errorHandler(err: unknown, _req: Request, res: Response, _next: 
       error: 'Validation failed',
       details: err.issues.map((i) => ({ field: i.path.join('.'), message: i.message })),
     });
+  }
+
+  if (err instanceof MulterError) {
+    const message = err.code === 'LIMIT_FILE_SIZE' ? 'File is too large (5 MB maximum)' : err.message;
+    return res.status(400).json({ error: message });
   }
 
   if (err instanceof HttpError) {
