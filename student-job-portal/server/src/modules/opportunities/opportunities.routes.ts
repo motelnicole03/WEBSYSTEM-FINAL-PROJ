@@ -13,7 +13,7 @@ const adminOnly = [authenticate, authorize('admin')];
 const studentOnly = [authenticate, authorize('student')];
 
 // Public: browse and search open opportunities
-router.get('/', controller.list);
+router.get('/', optionalAuthenticate, controller.list);
 
 // Fixed paths must come before '/:id' so they are not read as an id
 router.get('/mine', ...employerOnly, controller.mine);

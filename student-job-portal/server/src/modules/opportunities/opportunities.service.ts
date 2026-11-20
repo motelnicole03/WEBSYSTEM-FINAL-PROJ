@@ -38,8 +38,13 @@ async function getOwnedOrThrow(user: TokenPayload, id: number) {
 
 // ---------- public / student ----------
 
-export async function listOpen(filters: ListQuery) {
+export async function listOpen(filters: ListQuery, viewer?: TokenPayload) {
   const rows = await repo.listOpen(filters);
+
+  // Record what people search for (first page only, so paging is not counted again). Never block on this.
+  if (filters.q && filters.page === 1) {
+    repo.recordSearch(viewer?.userId ?? null, filters.q).catch((error) => console.error('recordSearch failed', error));
+  }
   const total = rows[0]?.total ?? 0;
   return {
     data: camelize(rows.map(({ total: _total, ...row }) => row)),

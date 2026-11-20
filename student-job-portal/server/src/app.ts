@@ -4,11 +4,15 @@ import helmet from 'helmet';
 import { env } from './config/env';
 import { errorHandler, notFound } from './middleware/errorHandler';
 import adminRoutes from './modules/admin/admin.routes';
+import analyticsRoutes from './modules/analytics/analytics.routes';
 import applicationRoutes from './modules/applications/applications.routes';
 import authRoutes from './modules/auth/auth.routes';
+import interviewRoutes from './modules/interviews/interviews.routes';
+import lookupRoutes from './modules/lookups/lookups.routes';
 import notificationRoutes from './modules/notifications/notifications.routes';
 import opportunityRoutes from './modules/opportunities/opportunities.routes';
 import resumeRoutes from './modules/resumes/resumes.routes';
+import studentRoutes from './modules/students/students.routes';
 
 export const app = express();
 
@@ -27,6 +31,10 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/resumes', resumeRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/students', studentRoutes);
+app.use('/api/interviews', interviewRoutes);
+app.use('/api/lookups', lookupRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

@@ -286,3 +286,10 @@ export async function recordView(userId: number | null, opportunityId: number) {
     [userId, opportunityId],
   );
 }
+
+export async function recordSearch(userId: number | null, terms: string) {
+  await query(
+    `INSERT INTO analytics_events (user_id, event_type, search_terms) VALUES ($1, 'search', $2)`,
+    [userId, terms],
+  );
+}

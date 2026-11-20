@@ -9,7 +9,7 @@ import { listQuerySchema } from './opportunities.schema';
 
 export const list = asyncHandler(async (req: Request, res: Response) => {
   const filters = listQuerySchema.parse(req.query); // a ZodError becomes a 400
-  res.json(await service.listOpen(filters));
+  res.json(await service.listOpen(filters, req.user));
 });
 
 export const getOne = asyncHandler(async (req: Request, res: Response) => {

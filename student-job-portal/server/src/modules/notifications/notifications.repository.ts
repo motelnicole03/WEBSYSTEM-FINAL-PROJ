@@ -8,7 +8,8 @@ export type NotificationType =
   | 'approval'
   | 'message'
   | 'announcement'
-  | 'new_application';
+  | 'new_application'
+  | 'interview';
 
 const INSERT_SQL = 'INSERT INTO notifications (user_id, type, message) VALUES ($1, $2, $3)';
 
