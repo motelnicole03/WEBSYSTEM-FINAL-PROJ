@@ -9,6 +9,7 @@ import applicationRoutes from './modules/applications/applications.routes';
 import authRoutes from './modules/auth/auth.routes';
 import interviewRoutes from './modules/interviews/interviews.routes';
 import lookupRoutes from './modules/lookups/lookups.routes';
+import messageRoutes from './modules/messages/messages.routes';
 import notificationRoutes from './modules/notifications/notifications.routes';
 import opportunityRoutes from './modules/opportunities/opportunities.routes';
 import resumeRoutes from './modules/resumes/resumes.routes';
@@ -34,6 +35,7 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/interviews', interviewRoutes);
+app.use('/api/messages', messageRoutes);
 app.use('/api/lookups', lookupRoutes);
 
 app.use(notFound);
