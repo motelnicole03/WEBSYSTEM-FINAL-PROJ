@@ -187,6 +187,40 @@ export async function topSearches(from: Date, to: Date) {
   );
 }
 
+/** Latest things that happened on the platform, for the admin dashboard feed. */
+export async function recentActivity(limit: number) {
+  return query(
+    `SELECT kind, title, detail, at FROM (
+       SELECT 'student' AS kind, s.first_name || ' ' || s.last_name AS title,
+              'New student registered' AS detail, u.created_at AS at
+         FROM students s JOIN users u ON u.user_id = s.user_id
+       UNION ALL
+       SELECT 'company', e.company_name, 'Company registered (' || e.verification_status || ')', u.created_at
+         FROM employers e JOIN users u ON u.user_id = e.user_id
+       UNION ALL
+       SELECT 'application', s.first_name || ' ' || s.last_name, 'Applied to ' || o.title, a.submitted_at
+         FROM applications a
+         JOIN students s ON s.student_id = a.student_id
+         JOIN opportunities o ON o.opportunity_id = a.opportunity_id
+       UNION ALL
+       SELECT 'hire', s.first_name || ' ' || s.last_name, 'Hired at ' || e.company_name, l.changed_at
+         FROM application_status_log l
+         JOIN applications a ON a.application_id = l.application_id
+         JOIN students s ON s.student_id = a.student_id
+         JOIN opportunities o ON o.opportunity_id = a.opportunity_id
+         JOIN employers e ON e.employer_id = o.employer_id
+        WHERE l.status = 'hired'
+       UNION ALL
+       SELECT 'job', o.title, 'Job posted by ' || e.company_name, o.created_at
+         FROM opportunities o JOIN employers e ON e.employer_id = o.employer_id
+        WHERE o.status <> 'draft'
+     ) events
+     ORDER BY at DESC
+     LIMIT $1`,
+    [limit],
+  );
+}
+
 // ---------- employer ----------
 
 export async function findEmployerIdByUserId(userId: number) {

@@ -1,3 +1,4 @@
+import path from 'node:path';
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
@@ -17,7 +18,13 @@ import studentRoutes from './modules/students/students.routes';
 
 export const app = express();
 
-app.use(helmet());
+// helmet's default policy already blocks inline scripts. The one change: no "upgrade-insecure-requests",
+// which makes Safari try https on http://localhost and break the page.
+app.use(
+  helmet({
+    contentSecurityPolicy: { useDefaults: true, directives: { 'upgrade-insecure-requests': null } },
+  }),
+);
 app.use(cors({ origin: env.CLIENT_URL, credentials: true }));
 app.use(express.json({ limit: '1mb' }));
 
@@ -37,6 +44,9 @@ app.use('/api/students', studentRoutes);
 app.use('/api/interviews', interviewRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/lookups', lookupRoutes);
+
+// The website (HTML, CSS, JS) is served from server/public, on the same address as the API
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.use(notFound);
 app.use(errorHandler);

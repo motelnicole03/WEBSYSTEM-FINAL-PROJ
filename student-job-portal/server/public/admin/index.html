@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin dashboard | StudentConnect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css">
+</head>
+<body class="portal">
+<aside id="sidebar"></aside>
+<div class="portal-body">
+  <div id="topbar" class="portal-topbar"></div>
+  <main id="main" class="portal-main">
+    <header id="head"></header>
+    <div id="message"></div>
+    <h2 class="section-title">Dashboard</h2>
+    <div id="kpis" class="kpis"></div>
+    <div class="dash-grid">
+      <section class="card"><h3>Student Overview</h3><div id="chart"></div></section>
+      <section class="card"><h3>Recent Activities</h3><div id="activity"></div></section>
+      <section class="card"><h3>Quick Actions</h3><div class="tiles"><a class="tile" href="/admin/jobs.html"><i>✓</i>Review Approvals</a><a class="tile" href="/admin/coming-soon.html?key=students&title=Student%20Management&note=Listing%20and%20suspending%20students%20needs%20new%20backend%20endpoints."><i>◫</i>Student Management</a><a class="tile" href="/admin/reports.html"><i>▤</i>View Reports</a><a class="tile" href="/admin/coming-soon.html?key=settings&title=Settings&note=Coming%20next."><i>⚙</i>Settings</a></div></section>
+    </div>
+  </main>
+</div>
+<script type="module" src="/js/admin-dashboard.js"></script>
+</body>
+</html>

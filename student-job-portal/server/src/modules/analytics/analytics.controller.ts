@@ -25,6 +25,11 @@ export const adminBreakdowns = asyncHandler(async (req: Request, res: Response) 
   res.json(await service.adminBreakdowns(rangeQuerySchema.parse(req.query)));
 });
 
+export const adminActivity = asyncHandler(async (req: Request, res: Response) => {
+  const limit = Math.min(Math.max(Number(req.query.limit) || 8, 1), 50);
+  res.json(await service.adminActivity(limit));
+});
+
 export const adminReport = asyncHandler(async (req: Request, res: Response) => {
   const name = reportNameSchema.parse(req.params.name);
   const { fileName, csv } = await service.buildReport(name, rangeQuerySchema.parse(req.query));

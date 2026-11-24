@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reports & Analytics | StudentConnect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css">
+</head>
+<body class="portal">
+<aside id="sidebar"></aside>
+<div class="portal-body">
+  <div id="topbar" class="portal-topbar"></div>
+  <main id="main" class="portal-main">
+    <header id="head"></header>
+    <div id="message"></div>
+    <div class="row-wrap" style="margin-top:1.25rem;align-items:flex-end">
+      <label class="field" style="margin:0"><span>From</span><input type="date" id="from"></label>
+      <label class="field" style="margin:0"><span>To</span><input type="date" id="to"></label>
+      <div class="row-wrap" style="margin-left:auto">
+        <button class="btn primary sm" data-report="opportunities">Download opportunities (CSV)</button>
+        <button class="btn primary sm" data-report="applications">Download applications (CSV)</button>
+        <button class="btn primary sm" data-report="placements">Download placements (CSV)</button>
+      </div>
+    </div>
+    <div id="kpis" class="kpis" style="margin-top:1.5rem"></div>
+    <div id="tables" class="stack" style="margin-top:1.5rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(22rem,1fr));gap:1rem"></div>
+  </main>
+</div>
+<script type="module" src="/js/admin-reports.js"></script>
+</body>
+</html>

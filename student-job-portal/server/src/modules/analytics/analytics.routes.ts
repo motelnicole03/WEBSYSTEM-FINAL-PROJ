@@ -11,6 +11,7 @@ router.use(authenticate);
 router.get('/admin/overview', authorize('admin'), controller.adminOverview);
 router.get('/admin/trends', authorize('admin'), controller.adminTrends); // &interval=week|month
 router.get('/admin/breakdowns', authorize('admin'), controller.adminBreakdowns);
+router.get('/admin/activity', authorize('admin'), controller.adminActivity); // ?limit=8
 router.get('/admin/reports/:name', authorize('admin'), controller.adminReport); // opportunities|applications|placements
 
 // Employer dashboard: their own postings and applicants only

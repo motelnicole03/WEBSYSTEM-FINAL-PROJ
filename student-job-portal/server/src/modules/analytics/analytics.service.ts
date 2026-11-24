@@ -131,6 +131,10 @@ export async function adminBreakdowns(q: RangeQuery) {
   };
 }
 
+export async function adminActivity(limit: number) {
+  return camelize(await repo.recentActivity(limit));
+}
+
 // ---------- CSV reports ----------
 
 const REPORT_COLUMNS: Record<ReportName, CsvColumn[]> = {

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Employer dashboard | StudentConnect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css">
+</head>
+<body class="portal">
+<aside id="sidebar"></aside>
+<div class="portal-body">
+  <div id="topbar" class="portal-topbar"></div>
+  <main id="main" class="portal-main">
+    <header id="head"></header>
+    <div id="message"></div>
+    <h2 class="section-title">Dashboard</h2>
+    <div id="kpis" class="kpis"></div>
+    <div class="dash-grid">
+      <section class="card"><h3>Hiring Funnel</h3><div id="funnel"></div></section>
+      <section class="card"><h3>Upcoming Interviews</h3><div id="upcoming"></div></section>
+      <section class="card"><h3>Quick Actions</h3><div class="tiles"><a class="tile" href="/employer/job-form.html"><i>+</i>Post a Job</a><a class="tile" href="/employer/applicants.html"><i>◫</i>View Applicants</a><a class="tile" href="/employer/interviews.html"><i>▤</i>Interviews</a><a class="tile" href="/employer/messages.html"><i>✉</i>Messages</a></div></section>
+    </div>
+    <section class="card" style="margin-top:1.5rem"><h3>Job Post Performance</h3><div id="perf"></div></section>
+  </main>
+</div>
+<script type="module" src="/js/employer-dashboard.js"></script>
+</body>
+</html>

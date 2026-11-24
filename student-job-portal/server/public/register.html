@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign up | StudentConnect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<header id="site-header" class="site-header"></header>
+<main class="auth">
+  <form id="register-form" class="panel">
+    <h1 class="bold">Create your account</h1>
+    <div class="seg"><button type="button" data-role="student" class="active">Student</button><button type="button" data-role="employer">Employer</button></div>
+    <div id="message"></div>
+    <div id="fields"></div>
+    <label class="field"><span>Email</span><input name="email" type="email" required autocomplete="email"><small class="err" data-err="email"></small></label>
+    <label class="field"><span>Password</span><input name="password" type="password" required minlength="8" autocomplete="new-password"><small class="err" data-err="password"></small></label>
+    <button type="submit" class="btn primary" style="width:100%">Create account</button>
+    <p class="muted small mt">Already registered? <a class="link" href="/login.html">Login</a></p>
+  </form>
+</main>
+<footer id="site-footer"></footer>
+<script type="module" src="/js/register.js"></script>
+</body>
+</html>
