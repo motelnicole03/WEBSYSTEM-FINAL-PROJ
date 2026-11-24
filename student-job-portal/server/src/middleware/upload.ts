@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import multer from 'multer';
-import { UPLOAD_DIR } from '../config/paths';
+import { AVATAR_DIR, UPLOAD_DIR } from '../config/paths';
 import { HttpError } from '../utils/httpError';
 
 export const ALLOWED_RESUME_TYPES: Record<string, 'pdf' | 'docx'> = {
@@ -31,3 +31,32 @@ export const resumeUpload = multer({
     cb(HttpError.badRequest('Only PDF or DOCX files are allowed'));
   },
 }).single('file');
+
+
+// ---------- profile photo ----------
+
+export const ALLOWED_PHOTO_TYPES: Record<string, 'jpg' | 'png' | 'webp'> = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp',
+};
+
+const photoStorage = multer.diskStorage({
+  destination: (_req, _file, cb) => {
+    fs.mkdirSync(AVATAR_DIR, { recursive: true });
+    cb(null, AVATAR_DIR);
+  },
+  filename: (_req, file, cb) => {
+    cb(null, `${crypto.randomUUID()}.${ALLOWED_PHOTO_TYPES[file.mimetype]}`);
+  },
+});
+
+/** Accepts one JPG, PNG or WEBP image in the form field "photo", up to 5 MB. */
+export const photoUpload = multer({
+  storage: photoStorage,
+  limits: { fileSize: MAX_UPLOAD_BYTES, files: 1 },
+  fileFilter: (_req, file, cb) => {
+    if (ALLOWED_PHOTO_TYPES[file.mimetype]) return cb(null, true);
+    cb(HttpError.badRequest('Only JPG, PNG or WEBP images are allowed'));
+  },
+}).single('photo');

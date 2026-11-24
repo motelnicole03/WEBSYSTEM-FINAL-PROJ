@@ -6,6 +6,7 @@ export async function findProfileByUserId(userId: number) {
   const rows = await query(
     `SELECT s.student_id, s.first_name, s.last_name, s.student_number, s.year_level,
             to_char(s.availability, 'YYYY-MM-DD') AS availability,
+              s.bio, s.photo_path,
             s.program_id, p.program_name, u.email
        FROM students s
        JOIN programs p ON p.program_id = s.program_id
@@ -33,6 +34,7 @@ export async function updateProfile(studentId: number, input: UpdateProfileInput
     programId: 'program_id',
     yearLevel: 'year_level',
     availability: 'availability',
+    bio: 'bio',
   } as const;
 
   const sets: string[] = [];
@@ -75,4 +77,10 @@ export async function countResumes(studentId: number): Promise<number> {
     studentId,
   ]);
   return rows[0].count;
+}
+
+
+/** Saves the profile photo file name (or null to remove it). */
+export async function setPhoto(studentId: number, fileName: string | null) {
+  await query('UPDATE students SET photo_path = $1 WHERE student_id = $2', [fileName, studentId]);
 }

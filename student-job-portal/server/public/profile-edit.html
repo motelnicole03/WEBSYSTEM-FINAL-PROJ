@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Edit profile | StudentConnect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/profile.css">
+</head>
+<body>
+<header id="site-header" class="site-header"></header>
+<main class="container" style="padding-top:6rem;padding-bottom:3rem;max-width:48rem">
+  <a class="link small" href="/profile.html">&larr; Back to My Profile</a>
+  <h1 class="bold mt-sm">Edit profile</h1>
+  <div id="completeness" class="panel mt"></div>
+  <section class="panel mt"><h2 class="bold">Profile photo</h2><div id="photo" class="mt-sm"></div></section>
+  <section class="panel mt"><h2 class="bold">Details</h2><form id="details" class="mt-sm"></form></section>
+  <section class="panel mt"><h2 class="bold">Skills</h2><form id="skills" class="mt-sm"></form></section>
+  <section id="resume" class="panel mt"><div class="row between"><h2 class="bold">Resumes</h2>
+    <label class="btn ghost sm" style="cursor:pointer">Upload<input id="resume-file" type="file" accept=".pdf,.doc,.docx" hidden></label></div>
+    <p id="resume-msg" class="small"></p><div id="resume-list"></div></section>
+</main>
+<footer id="site-footer"></footer>
+<script type="module" src="/js/profile-edit.js"></script>
+</body>
+</html>

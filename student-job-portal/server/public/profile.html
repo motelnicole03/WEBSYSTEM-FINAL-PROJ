@@ -7,17 +7,19 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/profile.css">
 </head>
 <body>
 <header id="site-header" class="site-header"></header>
-<main class="container" style="padding-top:6rem;max-width:48rem">
-  <h1 class="bold">My profile</h1>
-  <div id="completeness" class="panel mt"></div>
-  <section class="panel mt"><h2 class="bold">Details</h2><form id="details" class="mt-sm"></form></section>
-  <section class="panel mt"><h2 class="bold">Skills</h2><form id="skills" class="mt-sm"></form></section>
-  <section class="panel mt"><div class="row between"><h2 class="bold">Resumes</h2>
-    <label class="btn ghost sm" style="cursor:pointer">Upload<input id="resume-file" type="file" accept=".pdf,.doc,.docx" hidden></label></div>
-    <p id="resume-msg" class="small"></p><div id="resume-list"></div></section>
+<main class="container" style="padding-top:6rem;padding-bottom:3rem;max-width:48rem">
+  <div id="message"></div>
+  <section id="profile-card" class="panel profile-card"></section>
+  <div id="completeness"></div>
+  <section class="panel mt"><h2 class="bold">About me</h2><div id="about" class="mt-sm"></div></section>
+  <section class="panel mt"><h2 class="bold">Skills</h2><div id="skills" class="mt-sm"></div></section>
+  <section class="panel mt"><div class="row between"><h2 class="bold">Resume</h2>
+    <a class="btn ghost sm" href="/profile-edit.html#resume">Manage resumes</a></div>
+    <p id="resume-msg" class="small"></p><div id="resume-list" class="mt-sm"></div></section>
 </main>
 <footer id="site-footer"></footer>
 <script type="module" src="/js/profile.js"></script>

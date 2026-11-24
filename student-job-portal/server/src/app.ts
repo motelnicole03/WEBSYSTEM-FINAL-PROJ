@@ -3,6 +3,7 @@ import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import { env } from './config/env';
+import { AVATAR_DIR } from './config/paths';
 import { errorHandler, notFound } from './middleware/errorHandler';
 import adminRoutes from './modules/admin/admin.routes';
 import analyticsRoutes from './modules/analytics/analytics.routes';
@@ -45,6 +46,8 @@ app.use('/api/interviews', interviewRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/lookups', lookupRoutes);
 
+// Profile photos only (random file names). Resumes stay private and are only served through /api/resumes.
+app.use('/avatars', express.static(AVATAR_DIR, { maxAge: '1d' }));
 // The website (HTML, CSS, JS) is served from server/public, on the same address as the API
 app.use(express.static(path.join(__dirname, '..', 'public')));
 

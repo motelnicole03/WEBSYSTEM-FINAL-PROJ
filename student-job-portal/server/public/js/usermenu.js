@@ -20,6 +20,14 @@ function menuItems(user) {
   return user.role === 'employer' ? [['/employer/index.html', 'Dashboard']] : [['/admin/index.html', 'Admin dashboard']];
 }
 
+// The round button in the navbar: the student's photo if they have one, otherwise their initials
+function avatarContent(user, name) {
+  const url = user.student?.photoUrl;
+  return url
+    ? html`<img src="${url}" alt="" style="display:block;width:100%;height:100%;border-radius:50%;object-fit:cover">`
+    : initials(name);
+}
+
 const setBadge = (badge, count) => {
   badge.hidden = count <= 0;
   badge.textContent = count > 9 ? '9+' : String(count);
@@ -45,7 +53,7 @@ export function mountUserMenu(container, user) {
       </div>
     </div>` : ''}
     <div class="dropdown" data-account>
-      <button class="avatar-btn" aria-label="Account menu" aria-expanded="false">${initials(name)}</button>
+      <button class="avatar-btn" style="padding:0;overflow:hidden" aria-label="Account menu" aria-expanded="false">${avatarContent(user, name)}</button>
       <div class="dd-panel narrow" hidden>
         <div style="padding:.75rem 1rem;border-bottom:1px solid var(--line)">
           <p class="bold small truncate">${name}</p><p class="muted xs truncate">${user.email}</p>

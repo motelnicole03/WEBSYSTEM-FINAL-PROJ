@@ -56,7 +56,12 @@ export async function getCurrentUser(userId: number) {
     role: row.role,
     status: row.status,
     student: row.student_id
-      ? { id: row.student_id, firstName: row.first_name, lastName: row.last_name }
+            ? {
+          id: row.student_id,
+          firstName: row.first_name,
+          lastName: row.last_name,
+          photoUrl: row.photo_path ? `/avatars/${row.photo_path}` : null,
+        }
       : null,
     employer: row.employer_id
       ? { id: row.employer_id, companyName: row.company_name, verificationStatus: row.verification_status }

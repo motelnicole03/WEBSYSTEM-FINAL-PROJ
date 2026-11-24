@@ -11,7 +11,11 @@ export const updateProfileSchema = z
     availability: z
       .string()
       .regex(/^\d{4}-\d{2}-\d{2}$/, 'Use the format YYYY-MM-DD')
-      .nullable(),
+            .nullable(),
+    // Short "about me" text. null clears it.
+    bio: z.string().trim().max(500).nullable(),
+    // Profile photo file name. null clears it.
+    photo_path: z.string().trim().max(255).nullable(),
   })
   .partial()
   .refine((body) => Object.keys(body).length > 0, { message: 'Send at least one field to update' });

@@ -18,6 +18,7 @@ export interface UserProfileRow {
   student_id: number | null;
   first_name: string | null;
   last_name: string | null;
+  photo_path: string | null;
   employer_id: number | null;
   company_name: string | null;
   verification_status: string | null;
@@ -34,7 +35,7 @@ export async function findUserByEmail(email: string): Promise<UserRow | undefine
 export async function findUserProfile(userId: number): Promise<UserProfileRow | undefined> {
   const rows = await query<UserProfileRow>(
     `SELECT u.user_id, u.email, u.role, u.status,
-            s.student_id, s.first_name, s.last_name,
+            s.student_id, s.first_name, s.last_name, s.photo_path,
             e.employer_id, e.company_name, e.verification_status
        FROM users u
        LEFT JOIN students  s ON s.user_id = u.user_id
