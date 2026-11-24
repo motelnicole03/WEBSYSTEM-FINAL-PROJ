@@ -5,11 +5,7 @@ import { hashPassword } from '../utils/password';
 // Safe to run more than once: existing rows are skipped.
 const PROGRAMS = [
   'BS Information Technology',
-  'BS Computer Science',
-  'BS Business Administration',
-  'BS Accountancy',
-  'BS Hospitality Management',
-  'BS Nursing',
+  'BS Computer Science'
 ];
 
 const SKILLS = [
