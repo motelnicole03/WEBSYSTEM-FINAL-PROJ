@@ -78,7 +78,13 @@ export async function apply(user: TokenPayload, input: ApplyInput) {
   if (!student) throw HttpError.forbidden('Student profile not found');
 
   const opportunity = await repo.findOpportunityForApply(input.opportunityId);
-  if (!opportunity || opportunity.employer_verification !== 'verified') {
+    // Posts of unverified, blocked or removed companies behave as if they do not exist
+  if (
+    !opportunity ||
+    opportunity.employer_verification !== 'verified' ||
+    opportunity.employer_account_status === 'suspended' ||
+    opportunity.employer_account_status === 'inactive'
+  ) {
     throw HttpError.notFound('Opportunity not found');
   }
   if (opportunity.status !== 'open') {

@@ -12,9 +12,9 @@ export const listEmployers = asyncHandler(async (req: Request, res: Response) =>
 });
 
 export const verifyEmployer = asyncHandler(async (req: Request, res: Response) => {
-  res.json(await service.setVerification(parseId(req.params.id), 'verified'));
+  res.json(await service.setVerification(req.user!, parseId(req.params.id), 'verified'));
 });
 
 export const rejectEmployer = asyncHandler(async (req: Request, res: Response) => {
-  res.json(await service.setVerification(parseId(req.params.id), 'rejected'));
+  res.json(await service.setVerification(req.user!, parseId(req.params.id), 'rejected'));
 });

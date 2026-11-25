@@ -14,6 +14,7 @@ export interface OpportunityDetailRow {
   employer_id: number;
   employer_user_id: number;
   employer_verification: string;
+  employer_account_status: string;
   company_name: string;
   program_id: number | null;
   type: string;
@@ -89,13 +90,14 @@ export async function findStudentIdByUserId(userId: number) {
 export async function findById(id: number): Promise<OpportunityDetailRow | undefined> {
   const rows = await query<OpportunityDetailRow>(
     `SELECT o.opportunity_id, o.employer_id, e.user_id AS employer_user_id,
-            e.verification_status AS employer_verification, e.company_name,
+            e.verification_status AS employer_verification, u.status AS employer_account_status, e.company_name,
             o.program_id, o.type, o.title, o.description, o.requirements, o.location,
             o.work_setup, o.allowance_salary::float8 AS allowance_salary, o.slots,
             o.deadline, o.status, o.created_at,
             ${SKILLS_JSON} AS skills
        FROM opportunities o
-       JOIN employers e ON e.employer_id = o.employer_id
+        JOIN employers e ON e.employer_id = o.employer_id
+       JOIN users u ON u.user_id = e.user_id
       WHERE o.opportunity_id = $1`,
     [id],
   );
@@ -108,6 +110,7 @@ export async function listOpen(f: ListQuery): Promise<OpportunityListRow[]> {
     `o.status = 'open'`,
     `(o.deadline IS NULL OR o.deadline > now())`,
     `e.verification_status = 'verified'`,
+    `EXISTS (SELECT 1 FROM users eu WHERE eu.user_id = e.user_id AND eu.status NOT IN ('suspended', 'inactive'))`,
   ];
   const params: unknown[] = [];
   const add = (value: unknown) => {

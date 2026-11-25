@@ -43,11 +43,14 @@ export async function findOpportunityForApply(id: number) {
     deadline: Date | null;
     employer_user_id: number;
     employer_verification: string;
+    employer_account_status: string;
   }>(
     `SELECT o.opportunity_id, o.title, o.status, o.deadline,
-            e.user_id AS employer_user_id, e.verification_status AS employer_verification
+            e.user_id AS employer_user_id, e.verification_status AS employer_verification,
+            u.status AS employer_account_status
        FROM opportunities o
        JOIN employers e ON e.employer_id = o.employer_id
+       JOIN users u ON u.user_id = e.user_id
       WHERE o.opportunity_id = $1`,
     [id],
   );

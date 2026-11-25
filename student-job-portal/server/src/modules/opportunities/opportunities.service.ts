@@ -1,4 +1,5 @@
 import { withTransaction } from '../../config/db';
+import { logActivity } from '../../utils/activity';
 import { camelize } from '../../utils/camelize';
 import { HttpError } from '../../utils/httpError';
 import { TokenPayload } from '../../utils/jwt';
@@ -60,7 +61,12 @@ export async function listOpen(filters: ListQuery, viewer?: TokenPayload) {
 export async function getOne(id: number, viewer?: TokenPayload) {
   const row = await repo.findById(id);
 
-  const isPublic = row?.status === 'open' && row.employer_verification === 'verified';
+    // A blocked or removed company's posts are hidden from students
+  const isPublic =
+    row?.status === 'open' &&
+    row.employer_verification === 'verified' &&
+    row.employer_account_status !== 'suspended' &&
+    row.employer_account_status !== 'inactive';
   const isOwner = !!row && !!viewer && row.employer_user_id === viewer.userId;
   const isAdmin = viewer?.role === 'admin';
   if (!row || (!isPublic && !isOwner && !isAdmin)) {
@@ -72,7 +78,7 @@ export async function getOne(id: number, viewer?: TokenPayload) {
     repo.recordView(viewer?.userId ?? null, id).catch((error) => console.error('recordView failed', error));
   }
 
-  const { employer_user_id: _owner, employer_verification: _verified, ...detail } = row;
+  const { employer_user_id: _owner, employer_verification: _verified, employer_account_status: _account, ...detail } = row;
   return camelize(detail);
 }
 
@@ -172,6 +178,7 @@ export async function approve(admin: TokenPayload, id: number) {
     throw HttpError.conflict(`Only pending opportunities can be approved (this one is ${opportunity.status})`);
   }
   await repo.setStatus(id, 'open');
+  await logActivity(admin.userId, 'approved', 'job', id, opportunity.title, opportunity.company_name);
   return getOne(id, admin);
 }
 
@@ -183,5 +190,6 @@ export async function reject(admin: TokenPayload, id: number) {
     throw HttpError.conflict(`Only pending opportunities can be rejected (this one is ${opportunity.status})`);
   }
   await repo.setStatus(id, 'draft');
+  await logActivity(admin.userId, 'rejected', 'job', id, opportunity.title, opportunity.company_name);
   return getOne(id, admin);
 }

@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Settings | StudentConnect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css">
+<style>
+  html { scroll-behavior: smooth; }
+  .portal-main h2.section-title { scroll-margin-top: 1rem; }
+  .set-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; padding: .75rem 0; border-top: 1px solid var(--line); }
+  .set-row:first-child { border-top: 0; }
+  .x { width: 1.4rem; height: 1.4rem; border: 0; border-radius: 50%; background: #fff; color: inherit; font-size: 1rem; line-height: 1; cursor: pointer; }
+  details.qa { border-top: 1px solid var(--line); }
+  details.qa:first-of-type { border-top: 0; }
+  details.qa summary { padding: .75rem 0; font-size: .875rem; cursor: pointer; }
+  details.qa p { padding-bottom: .75rem; font-size: .8125rem; line-height: 1.5; }
+</style>
+</head>
+<body class="portal">
+<aside id="sidebar"></aside>
+<div class="portal-body">
+  <div id="topbar" class="portal-topbar"></div>
+  <main id="main" class="portal-main" style="max-width:62rem">
+    <header id="head"></header>
+    <nav class="tabs" aria-label="Settings sections">
+      <a class="tab" style="text-decoration:none" href="#account">My account</a>
+      <a class="tab" style="text-decoration:none" href="#catalog">Programs &amp; Skills</a>
+      <a class="tab" style="text-decoration:none" href="#blocked">Blocked &amp; removed</a>
+      <a class="tab" style="text-decoration:none" href="#activity">My activity</a>
+      <a class="tab" style="text-decoration:none" href="#support">Help &amp; support</a>
+    </nav>
+
+    <h2 class="section-title" id="account">My account</h2>
+    <section class="panel" style="margin-top:.75rem">
+      <div id="who" class="row-wrap" style="gap:2rem"></div>
+      <form id="pw" class="mt-lg" novalidate>
+        <p class="bold">Change password</p>
+        <div class="form-grid mt-sm">
+          <label class="field"><span>Current password</span><input type="password" name="currentPassword" autocomplete="current-password" required><small class="err" data-err="currentPassword"></small></label>
+          <label class="field"><span>New password</span><input type="password" name="newPassword" autocomplete="new-password" required><small class="err" data-err="newPassword"></small></label>
+          <label class="field"><span>Confirm new password</span><input type="password" name="confirmPassword" autocomplete="new-password" required><small class="err" data-err="confirmPassword"></small></label>
+        </div>
+        <div class="row-wrap mt"><button class="btn primary">Update password</button><span class="muted small">At least 8 characters.</span><span id="pw-msg" class="small"></span></div>
+      </form>
+    </section>
+
+    <h2 class="section-title" id="catalog">Programs &amp; Skills</h2>
+    <div class="form-grid" style="grid-template-columns:repeat(auto-fit,minmax(20rem,1fr));margin-top:.75rem;align-items:start">
+      <section class="panel">
+        <p class="bold">Programs</p>
+        <p class="muted small mt-sm">These appear in the Program dropdown when students sign up.</p>
+        <div id="programs" class="mt-sm"></div>
+        <form id="program-form" class="row-wrap mt" novalidate>
+          <input class="input" name="name" maxlength="150" placeholder="New program name" aria-label="New program name" style="flex:1;min-width:10rem">
+          <button class="btn primary">Add</button>
+        </form>
+        <p id="program-msg" class="small mt-sm"></p>
+        <p class="muted xs mt-sm">A program that students already use cannot be deleted.</p>
+      </section>
+      <section class="panel">
+        <p class="bold">Skills</p>
+        <p class="muted small mt-sm">Students and employers pick from these.</p>
+        <div id="skills" class="mt"></div>
+        <form id="skill-form" class="row-wrap mt" novalidate>
+          <input class="input" name="name" maxlength="100" placeholder="New skill name" aria-label="New skill name" style="flex:1;min-width:10rem">
+          <button class="btn primary">Add</button>
+        </form>
+        <p id="skill-msg" class="small mt-sm"></p>
+      </section>
+    </div>
+
+        <h2 class="section-title" id="blocked">Blocked &amp; removed</h2>
+    <p class="sub">Companies and students you blocked or removed. Restore them any time.</p>
+    <section class="panel" style="margin-top:.75rem">
+      <p class="bold">Find an account</p>
+      <p class="muted small mt-sm">Search by name, email, student number or company name, then block or remove it.</p>
+      <form id="find-form" class="row-wrap mt-sm" novalidate>
+        <input class="input" name="q" placeholder="Search students or companies" aria-label="Search accounts" style="flex:1;min-width:12rem">
+        <button class="btn primary">Search</button>
+      </form>
+      <div id="find-results" class="mt-sm"></div>
+      <p id="find-msg" class="small mt-sm"></p>
+
+      <p class="bold" style="margin-top:1.5rem">Blocked and removed accounts</p>
+      <div id="restricted-filters" class="chips mt-sm">
+        <button type="button" class="chip" data-rfilter="all" aria-pressed="true">All</button>
+        <button type="button" class="chip" data-rfilter="employer" aria-pressed="false">Companies</button>
+        <button type="button" class="chip" data-rfilter="student" aria-pressed="false">Students</button>
+        <button type="button" class="chip" data-rfilter="suspended" aria-pressed="false">Blocked only</button>
+        <button type="button" class="chip" data-rfilter="inactive" aria-pressed="false">Removed only</button>
+      </div>
+      <div id="restricted" class="mt-sm"></div>
+    </section>
+
+    <h2 class="section-title" id="activity">My activity</h2>
+    <p class="sub">Everything you did as admin, newest first. Use the filters to find it fast.</p>
+    <section class="panel" style="margin-top:.75rem">
+      <div class="row-wrap between">
+        <div id="activity-filters" class="chips">
+          <button type="button" class="chip" data-afilter="all" aria-pressed="true">All</button>
+          <button type="button" class="chip" data-afilter="company" aria-pressed="false">Companies</button>
+          <button type="button" class="chip" data-afilter="student" aria-pressed="false">Students</button>
+          <button type="button" class="chip" data-afilter="job" aria-pressed="false">Job posts</button>
+        </div>
+        <select id="activity-days" class="input" style="width:auto" aria-label="Time range">
+          <option value="7">Last 7 days</option>
+          <option value="30" selected>Last 30 days</option>
+          <option value="90">Last 90 days</option>
+          <option value="all">All time</option>
+        </select>
+      </div>
+      <div id="activity-list" class="mt-sm"></div>
+    </section>
+
+    <h2 class="section-title" id="support">Help &amp; support</h2>
+    <p class="sub">Find quick answers, or tell us when something is not working.</p>
+    <div class="form-grid" style="grid-template-columns:repeat(auto-fit,minmax(20rem,1fr));margin-top:.75rem;align-items:start">
+      <section class="panel">
+        <p class="bold">Report a problem</p>
+        <p class="muted small mt-sm">Describe what went wrong. Your report is saved so you can track it.</p>
+        <form id="report-form" class="stack mt" novalidate>
+          <label class="field"><span>What kind of problem?</span><select name="category" id="report-category"></select></label>
+          <label class="field"><span>Which page? (optional)</span><input name="page" maxlength="120" placeholder="For example: Job Management"></label>
+          <label class="field"><span>What happened?</span><textarea name="description" rows="5" maxlength="1000" placeholder="Tell us what you did, what you expected, and what you saw instead."></textarea><small class="err" data-err="description"></small></label>
+          <div class="row-wrap"><button class="btn primary">Send report</button><span class="muted small">Up to 1000 characters.</span><span id="report-msg" class="small"></span></div>
+        </form>
+      </section>
+      <section class="panel">
+        <p class="bold">Quick answers</p>
+        <div class="mt-sm">
+          <details class="qa"><summary>How do I approve a company?</summary><p>Open <b>Job Management</b> and choose the <b>Company verification</b> tab. Press <b>Verify</b> or <b>Reject</b> on the company. Employers can only post jobs after they are verified.</p></details>
+          <details class="qa"><summary>Why can't students see a job post?</summary><p>Students only see posts that are open. The employer must submit the post, and you must approve it under <b>Job approvals</b> in Job Management. The employer must also be verified.</p></details>
+          <details class="qa"><summary>How do I download a report?</summary><p>Open <b>Reports &amp; Analytics</b>, choose the dates, then press the download button of the report you want. It is saved as a CSV file that opens in Excel.</p></details>
+          <details class="qa"><summary>How do I add or remove a program or skill?</summary><p>Use <b>Programs &amp; Skills</b> on this page. A program that students already use cannot be deleted.</p></details>
+        </div>
+        <p class="bold" style="margin-top:1.5rem">Your recent reports</p>
+        <div id="reports" class="mt-sm"></div>
+        <p class="muted xs mt">Need urgent help? Email support@example.com</p>
+      </section>
+    </div>
+  </main>
+</div>
+<dialog id="reason-dialog" style="border:1px solid var(--line);border-radius:14px;padding:1.5rem;width:min(26rem,calc(100% - 2rem))">
+  <form id="reason-form" novalidate>
+    <p id="reason-title" class="bold"></p>
+    <p id="reason-sub" class="muted small mt-sm"></p>
+    <label class="field mt"><span>Reason (required)</span><textarea name="reason" rows="3" maxlength="300"></textarea><small id="reason-err" class="err"></small></label>
+    <div class="row-wrap mt" style="justify-content:flex-end"><button type="button" id="reason-cancel" class="btn ghost sm">Cancel</button><button class="btn primary sm">Confirm</button></div>
+  </form>
+</dialog>
+<script type="module" src="/js/admin-settings.js"></script>
+</body>
+</html>

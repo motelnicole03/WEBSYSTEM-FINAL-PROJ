@@ -73,9 +73,9 @@ const NAV = {
       ['/admin/coming-soon.html?key=students&title=Student%20Management&note=Listing%20and%20suspending%20students%20needs%20new%20backend%20endpoints.', 'Student Management', 'students'],
       ['/admin/jobs.html', 'Job Management', 'jobs'],
       ['/admin/reports.html', 'Reports & Analytics', 'reports'],
-      ['/admin/coming-soon.html?key=settings&title=Settings&note=Coming%20next.', 'Settings', 'settings'],
+      ['/admin/settings.html', 'Settings', 'settings'],
     ],
-    help: ['/admin/coming-soon.html?key=help&title=Help%20Center&note=Coming%20next.', 'Help Center', 'help'],
+
   },
 };
 

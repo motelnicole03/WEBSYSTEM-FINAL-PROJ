@@ -15,6 +15,8 @@ import messageRoutes from './modules/messages/messages.routes';
 import notificationRoutes from './modules/notifications/notifications.routes';
 import opportunityRoutes from './modules/opportunities/opportunities.routes';
 import resumeRoutes from './modules/resumes/resumes.routes';
+import moderationRoutes from './modules/moderation/moderation.routes';
+import settingsRoutes from './modules/settings/settings.routes';
 import studentRoutes from './modules/students/students.routes';
 
 export const app = express();
@@ -45,6 +47,8 @@ app.use('/api/students', studentRoutes);
 app.use('/api/interviews', interviewRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/lookups', lookupRoutes);
+app.use('/api/settings', settingsRoutes);
+app.use('/api/moderation', moderationRoutes);
 
 // Profile photos only (random file names). Resumes stay private and are only served through /api/resumes.
 app.use('/avatars', express.static(AVATAR_DIR, { maxAge: '1d' }));
