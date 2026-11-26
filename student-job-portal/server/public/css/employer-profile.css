@@ -30,3 +30,9 @@
 .logo-row .co-logo { width: 5.5rem; height: 5.5rem; font-size: 1.75rem; }
 
 @media (max-width: 900px) { .co-grid { grid-template-columns: 1fr; } }
+
+/* Company page on the public site (what students see): follow the site's own brand red */
+.site-co .co-logo { background: var(--brand-soft); color: var(--brand); }
+.site-co .co-info h2 { color: var(--ink); }
+.site-co .card > h3 { color: var(--ink); }
+

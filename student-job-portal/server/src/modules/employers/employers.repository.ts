@@ -14,12 +14,30 @@ export async function findProfileByUserId(userId: number) {
   return rows[0] as (Record<string, unknown> & { employer_id: number }) | undefined;
 }
 
+/**
+ * A company profile that students (and visitors) may see. Same rule as the public job list:
+ * only verified companies whose account is not blocked or removed.
+ */
+export async function findPublicProfile(employerId: number) {
+  const rows = await query(
+    `SELECT e.employer_id, e.company_name, e.industry, e.address, e.contact_person,
+            e.about, e.website, e.company_size, e.phone, e.logo_path, u.email
+       FROM employers e
+       JOIN users u ON u.user_id = e.user_id
+      WHERE e.employer_id = $1
+        AND e.verification_status = 'verified'
+        AND u.status NOT IN ('suspended', 'inactive')`,
+    [employerId],
+  );
+  return rows[0] as (Record<string, unknown> & { employer_id: number }) | undefined;
+}
+
 /** The company's newest open postings, for the "Open positions" card. */
 export async function listOpenPositions(employerId: number) {
   return query(
     `SELECT opportunity_id, title, type, location
        FROM opportunities
-      WHERE employer_id = $1 AND status = 'open'
+        WHERE employer_id = $1 AND status = 'open' AND (deadline IS NULL OR deadline > now())
       ORDER BY created_at DESC
       LIMIT 5`,
     [employerId],

@@ -42,6 +42,30 @@ export async function getMe(user: TokenPayload) {
   };
 }
 
+/**
+ * What a student sees on a company page. Contact details (person, email, phone) are only
+ * included when the visitor is logged in, so a stranger cannot collect them.
+ */
+export async function getPublic(employerId: number, viewer?: TokenPayload) {
+  const profile = await repo.findPublicProfile(employerId);
+  if (!profile) throw HttpError.notFound('Company not found');
+  const openPositions = await repo.listOpenPositions(employerId);
+  return {
+    employerId,
+    companyName: profile.company_name,
+    industry: profile.industry,
+    address: profile.address,
+    about: profile.about,
+    website: profile.website,
+    companySize: profile.company_size,
+    logoUrl: profile.logo_path ? `/avatars/${profile.logo_path}` : null,
+    openPositions: camelize(openPositions),
+    contact: viewer
+      ? { contactPerson: profile.contact_person, email: profile.email, phone: profile.phone }
+      : null,
+  };
+}
+
 export async function updateMe(user: TokenPayload, input: UpdateEmployerInput) {
   const { employer_id: employerId } = await requireProfile(user);
   await repo.updateProfile(employerId, input);

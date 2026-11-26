@@ -129,7 +129,7 @@ async function paintDetail() {
       <h2>${job.title}</h2>
       <div class="row mt">
         <span class="avatar" style="border-radius:.4rem">${initial(job.companyName)}</span>
-        <div class="small"><p style="font-weight:500">${job.companyName}</p>
+        <div class="small"><p style="font-weight:500"><a class="link" href="/company.html?id=${job.employerId}">${job.companyName}</a></p>
           <p class="muted xs" style="display:flex;align-items:center;gap:.25rem">${icons.pin(12)} ${job.location ?? 'Location not specified'}</p></div>
       </div>
       <div class="mt" style="display:flex;flex-wrap:wrap;align-items:center;gap:1.25rem">
