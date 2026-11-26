@@ -17,6 +17,34 @@ export async function findProfileByUserId(userId: number) {
   return rows[0] as (Record<string, unknown> & { student_id: number }) | undefined;
 }
 
+/** Same fields as findProfileByUserId, but looked up by the student's id (for an employer viewing an applicant). */
+export async function findProfileById(studentId: number) {
+  const rows = await query(
+    `SELECT s.student_id, s.first_name, s.last_name, s.student_number, s.year_level,
+            to_char(s.availability, 'YYYY-MM-DD') AS availability,
+            s.bio, s.photo_path, p.program_name, u.email
+       FROM students s
+       JOIN programs p ON p.program_id = s.program_id
+       JOIN users u ON u.user_id = s.user_id
+      WHERE s.student_id = $1`,
+    [studentId],
+  );
+  return rows[0] as (Record<string, unknown> & { student_id: number }) | undefined;
+}
+
+/** This student's applications to this employer's postings. Empty means the employer has no right to see the student. */
+export async function listApplicationsToEmployer(employerUserId: number, studentId: number) {
+  return query(
+    `SELECT a.application_id, a.current_status, a.submitted_at, o.opportunity_id, o.title AS opportunity_title
+       FROM applications a
+       JOIN opportunities o ON o.opportunity_id = a.opportunity_id
+       JOIN employers e ON e.employer_id = o.employer_id
+      WHERE e.user_id = $1 AND a.student_id = $2
+      ORDER BY a.submitted_at DESC`,
+    [employerUserId, studentId],
+  );
+}
+
 export async function listSkills(studentId: number) {
   return query(
     `SELECT sk.skill_id, sk.skill_name

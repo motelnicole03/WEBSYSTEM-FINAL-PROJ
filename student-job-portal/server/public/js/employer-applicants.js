@@ -60,6 +60,7 @@ function paintList() {
           ${(NEXT[a.currentStatus] ?? []).map(([s, label]) => html`<button class="btn primary sm" data-move="${s}" data-id="${a.applicationId}">${label}</button>`)}
           ${a.currentStatus === 'shortlisted' || a.currentStatus === 'interview' ? html`<button class="btn primary sm" data-schedule="${a.applicationId}">${a.currentStatus === 'shortlisted' ? 'Schedule interview' : 'Schedule another round'}</button>` : ''}
           <button class="btn ghost sm" data-chat="${a.applicationId}">Message</button>
+          <a class="btn ghost sm" href="/employer/student.html?id=${a.studentId}">View profile</a>
           ${CAN_REJECT.includes(a.currentStatus) ? html`<button class="btn ghost sm" data-reject="${a.applicationId}" style="color:var(--admin-number)">Reject</button>` : ''}
         </div>
         ${scheduleFor === a.applicationId ? html`<form class="card mt" data-schedule-form="${a.applicationId}" style="background:var(--admin-bg)">

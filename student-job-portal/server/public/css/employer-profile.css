@@ -36,3 +36,6 @@
 .site-co .co-info h2 { color: var(--ink); }
 .site-co .card > h3 { color: var(--ink); }
 
+
+/* A student's photo on the employer's applicant profile page: round instead of rounded square */
+.co-logo.round { border-radius: 50%; }

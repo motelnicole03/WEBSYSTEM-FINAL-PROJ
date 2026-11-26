@@ -4,6 +4,7 @@ import { AVATAR_DIR } from '../../config/paths';
 import { camelize } from '../../utils/camelize';
 import { HttpError } from '../../utils/httpError';
 import { TokenPayload } from '../../utils/jwt';
+import * as applicationRepo from '../applications/applications.repository';
 import * as repo from './students.repository';
 import { UpdateProfileInput } from './students.schema';
 
@@ -49,6 +50,34 @@ export async function getMe(user: TokenPayload) {
         photoUrl: photoPath ? `/avatars/${photoPath}` : null, // the file name stays private to the server
     skills: camelize(skills),
     profileCompleteness: completeness(resumeCount > 0, skills.length, profile.availability),
+  };
+}
+
+/**
+ * A student's profile as an employer sees it. Only allowed for students who applied to one of this
+ * employer's postings. Anyone else gets "not found", so ids cannot be probed.
+ */
+export async function getForEmployer(user: TokenPayload, studentId: number) {
+  const applications = await repo.listApplicationsToEmployer(user.userId, studentId);
+  const profile = applications.length ? await repo.findProfileById(studentId) : undefined;
+  if (!profile) throw HttpError.notFound('Student not found');
+
+  const { student_id: _id, photo_path: photoPath, ...rest } = profile;
+  const [skills, withFiles] = await Promise.all([
+    repo.listSkills(studentId),
+    Promise.all(
+      applications.map(async (a) => ({
+        ...(a as Record<string, unknown>),
+        files: await applicationRepo.files((a as { application_id: number }).application_id),
+      })),
+    ),
+  ]);
+  return {
+    ...camelize<Record<string, unknown>>(rest),
+    studentId,
+    photoUrl: photoPath ? `/avatars/${photoPath}` : null,
+    skills: camelize(skills),
+    applications: camelize(withFiles),
   };
 }
 

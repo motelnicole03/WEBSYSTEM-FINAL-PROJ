@@ -1,9 +1,16 @@
 import { Request, Response } from 'express';
 import { asyncHandler } from '../../utils/asyncHandler';
+import { HttpError } from '../../utils/httpError';
 import * as service from './students.service';
 
 export const getMe = asyncHandler(async (req: Request, res: Response) => {
   res.json(await service.getMe(req.user!));
+});
+
+export const getOneForEmployer = asyncHandler(async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id) || id <= 0) throw HttpError.badRequest('Invalid student id');
+  res.json(await service.getForEmployer(req.user!, id));
 });
 
 export const updateMe = asyncHandler(async (req: Request, res: Response) => {

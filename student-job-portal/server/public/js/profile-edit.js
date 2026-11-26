@@ -1,5 +1,5 @@
 // "Edit profile": the forms. What is saved here shows on the My Profile page (/profile.html).
-import { api, downloadFile, errorMessage, fieldErrors } from './api.js';
+import { api, downloadFile, errorMessage, fieldErrors, viewFile } from './api.js';
 import { requireRole } from './auth.js';
 import { mountSite } from './layout.js';
 import { $, $$, fmtDate, html, initials, onClick, render } from './ui.js';
@@ -71,6 +71,7 @@ function paintResumes() {
       <div class="row">
         <button class="btn ghost sm" data-download="${r.resumeId}">Download</button>
         ${r.isDefault ? '' : html`<button class="btn ghost sm" data-default="${r.resumeId}">Make default</button>`}
+        ${r.fileType === 'pdf' ? html`<button class="btn ghost sm" data-view="${r.resumeId}">View</button>` : ''}
         <button class="btn ghost sm muted" data-delete="${r.resumeId}">Delete</button>
       </div></li>`)}</ul>` : html`<p class="muted small mt">No resumes yet.</p>`);
 }
@@ -153,6 +154,11 @@ $('#resume-file').addEventListener('change', (e) => {
   form.append('file', file);
   form.append('isDefault', resumes.length === 0 ? 'true' : 'false'); // the first resume becomes the default
   resumeAction(() => api.postForm('/resumes', form), 'Resume uploaded.');
+});
+onClick($('#resume-list'), '[data-view]', (b) => {
+  const r = resumes.find((x) => x.resumeId === Number(b.dataset.view));
+  say('#resume-msg', '');
+  viewFile(`/resumes/${r.resumeId}/download`).catch((err) => say('#resume-msg', errorMessage(err), false));
 });
 onClick($('#resume-list'), '[data-download]', (b) => {
   const r = resumes.find((x) => x.resumeId === Number(b.dataset.download));

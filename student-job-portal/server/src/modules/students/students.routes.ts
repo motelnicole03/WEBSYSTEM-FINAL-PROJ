@@ -8,12 +8,15 @@ import { setSkillsSchema, updateProfileSchema } from './students.schema';
 
 const router = Router();
 
-router.use(authenticate, authorize('student'));
+const studentOnly = [authenticate, authorize('student')];
 
-router.get('/me', controller.getMe);
-router.patch('/me', validateBody(updateProfileSchema), controller.updateMe);
-router.put('/me/skills', validateBody(setSkillsSchema), controller.setSkills);
-router.post('/me/photo', photoUpload, controller.uploadPhoto); // multipart form: photo
-router.delete('/me/photo', controller.removePhoto);
+router.get('/me', ...studentOnly, controller.getMe);
+router.patch('/me', ...studentOnly, validateBody(updateProfileSchema), controller.updateMe);
+router.put('/me/skills', ...studentOnly, validateBody(setSkillsSchema), controller.setSkills);
+router.post('/me/photo', ...studentOnly, photoUpload, controller.uploadPhoto); // multipart form: photo
+router.delete('/me/photo', ...studentOnly, controller.removePhoto);
+
+// Employer: a student's profile, only for students who applied to that employer (kept last so "me" is not read as an id)
+router.get('/:id', authenticate, authorize('employer'), controller.getOneForEmployer);
 
 export default router;
