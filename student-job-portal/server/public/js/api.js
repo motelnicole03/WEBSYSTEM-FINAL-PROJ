@@ -74,6 +74,22 @@ export async function downloadFile(path, fileName) {
   URL.revokeObjectURL(url);
 }
 
+/** Opens a file that needs the login token in a new tab, without downloading it (PDFs show in the browser's viewer). */
+export async function viewFile(path) {
+  // Open the tab right away, inside the click, so the browser does not block it as a pop-up
+  const tab = window.open('', '_blank');
+  try {
+    const response = await send(path, { headers: authHeaders() });
+    if (!response.ok) throw new ApiError(response.status, 'Could not open the file');
+    const url = URL.createObjectURL(await response.blob());
+    if (tab) tab.location.href = url; else window.open(url, '_blank');
+    setTimeout(() => URL.revokeObjectURL(url), 60_000);
+  } catch (error) {
+    tab?.close();
+    throw error;
+  }
+}
+
 /** Turns a validation error into { field: message } to show under inputs. */
 export function fieldErrors(error) {
   if (!(error instanceof ApiError) || !error.details) return {};

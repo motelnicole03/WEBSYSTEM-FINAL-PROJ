@@ -1,5 +1,5 @@
 // "My Profile": a read-only view of the student's profile. Editing happens on /profile-edit.html.
-import { api, downloadFile, errorMessage } from './api.js';
+import { api, downloadFile, errorMessage, viewFile } from './api.js';
 import { requireRole } from './auth.js';
 import { mountSite } from './layout.js';
 import { $, html, initials, onClick, render } from './ui.js';
@@ -52,11 +52,18 @@ function paintResumes() {
     ? html`${sorted.map((r) => html`<div class="resume-item">
         <div style="min-width:0" class="small"><p class="truncate" style="font-weight:500">${r.fileName}${r.isDefault ? html` <span class="pill" style="background:var(--brand-soft);color:var(--brand);font-size:.6875rem">Default</span>` : ''}</p>
           <p class="muted xs">${formatSize(r.fileSize)}</p></div>
-        <button class="btn ghost sm" data-download="${r.resumeId}">Download</button>
+          <div class="row">
+          ${r.fileType === 'pdf' ? html`<button class="btn ghost sm" data-view="${r.resumeId}">View</button>` : ''}
+          <button class="btn ghost sm" data-download="${r.resumeId}">Download</button>
+        </div>
       </div>`)}`
     : html`<p class="muted small">No resume yet. <a class="link" href="/profile-edit.html#resume">Upload your resume</a>.</p>`);
 }
 
+onClick($('#resume-list'), '[data-view]', async (b) => {
+  const r = resumes.find((x) => x.resumeId === Number(b.dataset.view));
+  try { await viewFile(`/resumes/${r.resumeId}/download`); } catch (err) { $('#resume-msg').textContent = errorMessage(err); }
+});
 onClick($('#resume-list'), '[data-download]', async (b) => {
   const r = resumes.find((x) => x.resumeId === Number(b.dataset.download));
   try { await downloadFile(`/resumes/${r.resumeId}/download`, r.fileName); } catch (err) { $('#resume-msg').textContent = errorMessage(err); }
