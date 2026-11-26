@@ -132,8 +132,11 @@ async function paintDetail() {
         <div class="small"><p style="font-weight:500">${job.companyName}</p>
           <p class="muted xs" style="display:flex;align-items:center;gap:.25rem">${icons.pin(12)} ${job.location ?? 'Location not specified'}</p></div>
       </div>
-      <div class="mt" id="apply-area">
-        ${canApply ? (applied ? html`<span class="pill gray">Applied</span>` : html`<button class="btn primary sm" id="apply-btn">Apply Now</button>`) : ''}
+      <div class="mt" style="display:flex;flex-wrap:wrap;align-items:center;gap:1.25rem">
+        <div id="apply-area">
+          ${canApply ? (applied ? html`<span class="pill gray">Applied</span>` : html`<button class="btn primary sm" id="apply-btn">Apply Now</button>`) : ''}
+        </div>
+        <div id="rating-area"></div>
       </div>
     </header>
     <div class="body">
@@ -147,8 +150,56 @@ async function paintDetail() {
     </div>
   </article>`);
 
-  $('#apply-btn')?.addEventListener('click', () => startApply(id));
+    $('#apply-btn')?.addEventListener('click', () => startApply(id));
+  paintRating(job);
 }
+
+// ---------- company rating (the stars next to "Applied") ----------
+
+let ratingFor = null; // { employerId, info } of the company shown now
+
+async function paintRating(job) {
+  let info;
+  try { info = await api.get(`/ratings/companies/${job.employerId}`); } catch { return; } // the job still shows without it
+  if (state.selectedId !== job.opportunityId) return; // another job was picked while this loaded
+  drawRating(job.employerId, info, false);
+}
+
+function drawRating(employerId, info, changing) {
+  const area = $('#rating-area');
+  if (!area) return;
+  ratingFor = { employerId, info };
+  const summary = info.count
+    ? html`<span class="muted xs">Company rating: <b>${info.average.toFixed(1)}</b> &middot; ${info.count} ${info.count === 1 ? 'rating' : 'ratings'}</span>`
+    : html`<span class="muted xs">No ratings yet</span>`;
+  // Only a student who applied to this company can rate it. Everyone else just sees the average.
+  if (!isStudent || !info.canRate) { render(area, summary); return; }
+
+  const mine = info.myRating;
+  const pickable = !mine || changing; // stars are buttons only while the student can choose
+  const label = pickable ? 'Choose your rating' : `Your rating: ${mine} out of 5`;
+  render(area, html`<div class="rate-strip">
+    <span class="muted small">${mine ? 'Your rating' : 'Rate this company'}</span>
+    <span class="rstars" role="group" aria-label="${label}">${[1, 2, 3, 4, 5].map((n) => pickable
+      ? html`<button type="button" class="rstar${n <= (mine ?? 0) ? ' on' : ''}" data-rate="${n}" aria-label="${n} ${n === 1 ? 'star' : 'stars'}">&#9733;</button>`
+      : html`<span class="rstar${n <= mine ? ' on' : ''}" aria-hidden="true">&#9733;</span>`)}</span>
+    ${mine && !changing ? html`<button type="button" class="rate-link" data-rate-change>Change</button>` : ''}
+    ${changing ? html`<button type="button" class="rate-link muted" data-rate-cancel>Cancel</button>` : ''}
+    ${summary}<span id="rate-msg" class="small"></span></div>`);
+}
+
+onClick($('#detail'), '[data-rate]', async (button) => {
+  if (!ratingFor) return;
+  try {
+    const info = await api.put(`/ratings/companies/${ratingFor.employerId}`, { rating: Number(button.dataset.rate) });
+    drawRating(ratingFor.employerId, info, false);
+  } catch (e) {
+    const note = $('#rate-msg');
+    if (note) { note.textContent = errorMessage(e); note.className = 'small brand'; }
+  }
+});
+onClick($('#detail'), '[data-rate-change]', () => drawRating(ratingFor.employerId, ratingFor.info, true));
+onClick($('#detail'), '[data-rate-cancel]', () => drawRating(ratingFor.employerId, ratingFor.info, false));
 
 function startApply(id) {
   if (!user) { location.href = `/login.html?next=${encodeURIComponent(location.pathname + location.search)}`; return; }

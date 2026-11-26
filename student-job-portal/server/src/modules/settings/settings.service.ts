@@ -3,7 +3,7 @@ import { HttpError } from '../../utils/httpError';
 import { TokenPayload } from '../../utils/jwt';
 import { hashPassword, verifyPassword } from '../../utils/password';
 import * as repo from './settings.repository';
-import { ChangePasswordInput, ReportInput } from './settings.schema';
+import { ChangePasswordInput, NotificationPrefsInput, ReportInput } from './settings.schema';
 
 // PostgreSQL error 23505 = the value already exists (programs and skills have unique names)
 const isDuplicate = (err: unknown) => (err as { code?: string } | null)?.code === '23505';
@@ -75,3 +75,30 @@ export async function createReport(user: TokenPayload, input: ReportInput) {
 export async function listMyReports(user: TokenPayload) {
   return camelize(await repo.listReports(user.userId));
 }
+
+
+// ---------- notification preferences ----------
+
+// Which notification types each role can switch on or off
+const AVAILABLE_NOTIFICATIONS: Record<string, string[]> = {
+  student: ['status_change', 'interview', 'message'],
+  employer: ['new_application', 'interview', 'message'],
+  admin: [],
+};
+
+export async function getNotificationPrefs(user: TokenPayload) {
+  const available = AVAILABLE_NOTIFICATIONS[user.role] ?? [];
+  const muted = (await repo.getMuted(user.userId)).filter((type) => available.includes(type));
+  return { available, muted };
+}
+
+export async function updateNotificationPrefs(user: TokenPayload, input: NotificationPrefsInput) {
+  const available = AVAILABLE_NOTIFICATIONS[user.role] ?? [];
+  const muted = [...new Set<string>(input.muted)];
+  if (muted.some((type) => !available.includes(type))) {
+    throw HttpError.badRequest('That notification type is not available for your account');
+  }
+  await repo.setMuted(user.userId, muted);
+  return { available, muted };
+}
+

@@ -9,7 +9,7 @@ import { mountUserMenu } from './usermenu.js';
 const SITE_NAV = [
   ['/', 'Home', 'home'],
   ['/jobs.html', 'Find Job', 'jobs'],
-  ['/coming-soon.html?title=Company%20Reviews&note=Reviews%20need%20their%20own%20database%20tables%20and%20endpoints%20first.', 'Company Reviews', 'reviews'],
+  ['/reviews.html', 'Company Reviews', 'reviews'],
 ];
 
 /** Navbar and footer. `overlay` makes the navbar float transparently over the landing hero. */

@@ -33,3 +33,11 @@ export const createReport = asyncHandler(async (req: Request, res: Response) => 
 export const listMyReports = asyncHandler(async (req: Request, res: Response) => {
   res.json(await service.listMyReports(req.user!));
 });
+
+
+export const getNotificationPrefs = asyncHandler(async (req: Request, res: Response) => {
+  res.json(await service.getNotificationPrefs(req.user!));
+});
+export const updateNotificationPrefs = asyncHandler(async (req: Request, res: Response) => {
+  res.json(await service.updateNotificationPrefs(req.user!, req.body));
+});

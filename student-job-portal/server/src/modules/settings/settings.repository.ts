@@ -81,3 +81,18 @@ export function listReports(userId: number) {
     [userId],
   );
 }
+
+
+
+// ---------- notification preferences ----------
+
+export async function getMuted(userId: number): Promise<string[]> {
+  const rows = await query<{ muted_notifications: string[] }>('SELECT muted_notifications FROM users WHERE user_id = $1', [userId]);
+  return rows[0]?.muted_notifications ?? [];
+}
+
+export async function setMuted(userId: number, muted: string[]) {
+  await query('UPDATE users SET muted_notifications = $2 WHERE user_id = $1', [userId, muted]);
+}
+
+

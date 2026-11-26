@@ -15,6 +15,7 @@ function menuItems(user) {
       ['/applications.html', 'My Applications'],
       ['/saved.html', 'Saved Internships'],
       ['/profile.html', 'My Profile'],
+      ['/settings.html', 'Settings'],
     ];
   }
   return user.role === 'employer' ? [['/employer/index.html', 'Dashboard']] : [['/admin/index.html', 'Admin dashboard']];

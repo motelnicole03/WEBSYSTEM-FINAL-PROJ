@@ -1,0 +1,20 @@
+/* Company ratings: the stars in Find Job and the Company Reviews page. */
+
+/* Find Job: the strip next to "Applied" */
+.rate-strip { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .75rem; padding-left: 1.25rem; border-left: 1px solid var(--line); }
+.rstars { display: inline-flex; }
+.rstar { padding: 0 .1rem; border: 0; background: none; font-size: 1.5rem; line-height: 1; color: #c9c5d6; }
+button.rstar { cursor: pointer; }
+.rstar.on { color: #d9a400; }
+/* Hovering previews the rating: the star under the mouse and the ones before it light up */
+.rstars:hover button.rstar { color: #d9a400; }
+.rstars button.rstar:hover ~ button.rstar { color: #c9c5d6; }
+.rate-link { padding: 0; border: 0; background: none; color: var(--brand); font-size: .75rem; font-weight: 500; cursor: pointer; }
+.rate-link.muted { color: var(--muted); }
+
+/* Company Reviews page */
+.rgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(21rem, 1fr)); gap: 1.25rem; margin-top: 1.5rem; }
+.rcard { padding: 1.25rem; border: 1px solid var(--line); border-radius: .875rem; background: #fff; box-shadow: 0 2px 10px rgba(31, 29, 51, .04); }
+.rcard h2 { font-size: 1rem; font-weight: 500; }
+.rcard-foot { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-top: 1.125rem; padding-top: .875rem; border-top: 1px solid var(--line); }
+.rcard-foot .rstar { font-size: 1.25rem; }

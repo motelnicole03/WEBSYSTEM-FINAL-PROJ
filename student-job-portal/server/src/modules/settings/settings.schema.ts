@@ -24,3 +24,16 @@ export const reportSchema = z.object({
 
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
 export type ReportInput = z.infer<typeof reportSchema>;
+
+
+export const NOTIFICATION_TYPES = ['status_change', 'interview', 'message', 'new_application'] as const;
+
+// The notification types the user switched OFF
+export const notificationPrefsSchema = z.object({
+  muted: z.array(z.enum(NOTIFICATION_TYPES)).max(8),
+});
+
+export type NotificationPrefsInput = z.infer<typeof notificationPrefsSchema>;
+
+
+

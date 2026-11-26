@@ -3,8 +3,7 @@ import { authenticate } from '../../middleware/authenticate';
 import { authorize } from '../../middleware/authorize';
 import { validateBody } from '../../middleware/validate';
 import * as controller from './settings.controller';
-import { changePasswordSchema, programSchema, reportSchema, skillSchema } from './settings.schema';
-
+import { changePasswordSchema, notificationPrefsSchema, programSchema, reportSchema, skillSchema } from './settings.schema';
 const router = Router();
 
 // Everything under /api/settings needs a signed-in user
@@ -14,6 +13,8 @@ router.use(authenticate);
 router.post('/password', validateBody(changePasswordSchema), controller.changePassword);
 router.post('/reports', validateBody(reportSchema), controller.createReport);
 router.get('/reports', controller.listMyReports);
+router.get('/notifications', controller.getNotificationPrefs);
+router.put('/notifications', validateBody(notificationPrefsSchema), controller.updateNotificationPrefs);
 
 // Admin only: manage the programs and skills that people choose from
 router.get('/programs', authorize('admin'), controller.listPrograms);

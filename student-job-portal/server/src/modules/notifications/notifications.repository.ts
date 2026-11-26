@@ -20,6 +20,12 @@ export async function createWithClient(
   type: NotificationType,
   message: string,
 ) {
+    // Skip it when the user turned this type off in Settings
+  const prefs = await client.query<{ muted_notifications: string[] }>(
+    'SELECT muted_notifications FROM users WHERE user_id = $1',
+    [userId],
+  );
+  if (prefs.rows[0]?.muted_notifications?.includes(type)) return;
   await client.query(INSERT_SQL, [userId, type, message]);
 }
 

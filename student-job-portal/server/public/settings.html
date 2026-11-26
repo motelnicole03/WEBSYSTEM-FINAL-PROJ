@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Settings | StudentConnect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/settings.css">
+</head>
+<body>
+<header id="site-header" class="site-header"></header>
+<main class="container" style="padding-top:6rem;padding-bottom:3rem;max-width:45rem">
+  <h1 class="gkicker">SETTINGS</h1>
+  <div id="message"></div>
+
+  <section id="profile-card" class="gcard"></section>
+
+  <section id="notif-card" class="gcard"></section>
+
+  <section id="help-card" class="gcard">
+    <h2 class="gtitle">Help &amp; support</h2>
+    <p class="glbl" style="margin-top:.75rem">Report a problem</p>
+    <p class="gtxt">Tell us when something is not working. Your report is saved so you can track it.</p>
+    <form id="report-form" class="stack mt" novalidate>
+      <label class="field"><span>What kind of problem?</span><select name="category" id="report-category"></select></label>
+      <label class="field"><span>What happened?</span><textarea name="description" rows="4" maxlength="1000" placeholder="Tell us what you did, what you expected, and what you saw instead."></textarea><small class="err" data-err="description"></small></label>
+      <div class="row-wrap"><button class="btn primary">Send report</button><span class="muted small">Up to 1000 characters.</span><span id="report-msg" class="small"></span></div>
+    </form>
+  </section>
+</main>
+<footer id="site-footer"></footer>
+<script type="module" src="/js/settings.js"></script>
+</body>
+</html>

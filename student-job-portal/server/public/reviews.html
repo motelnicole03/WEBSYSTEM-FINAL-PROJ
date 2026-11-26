@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Company Reviews | StudentConnect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/ratings.css">
+</head>
+<body>
+<header id="site-header" class="site-header"></header>
+<main class="container" style="padding-top:6rem;padding-bottom:3rem;max-width:75rem">
+  <h1 style="font-size:1.875rem;font-weight:600">Company Reviews</h1>
+  <p class="muted small mt-sm">See how students rated the companies they applied to. To rate a company, open it in Find Job after you apply.</p>
+  <div class="row-wrap mt-lg">
+    <input id="q" class="input" placeholder="Search a company" aria-label="Search a company" style="flex:1;min-width:14rem">
+    <select id="sort" class="input" style="width:auto" aria-label="Sort by">
+      <option value="top">Highest rated</option>
+      <option value="most">Most ratings</option>
+      <option value="az">A to Z</option>
+    </select>
+  </div>
+  <div id="message"></div>
+  <div id="grid" class="rgrid"></div>
+  <p class="muted xs mt-lg">Only companies with at least one rating are listed.</p>
+</main>
+<footer id="site-footer"></footer>
+<script type="module" src="/js/reviews.js"></script>
+</body>
+</html>
