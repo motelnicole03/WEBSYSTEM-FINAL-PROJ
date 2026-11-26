@@ -1,9 +1,11 @@
-import { api, downloadFile, errorMessage } from './api.js';
+import { api, downloadFile, errorMessage, viewFile } from './api.js';
 import { openChat } from './chat.js';
 import { mountPortal } from './layout.js';
 import { pageTitle } from './portal.js';
 import { $, cap, fmtDate, fmtDateTime, html, initial, notice, onClick, query, render, statusPill } from './ui.js';
 
+// Browsers can only show PDFs in a tab; other files (such as DOCX) stay download-only
+const isPdf = (name) => /\.pdf$/i.test(name ?? '');
 await mountPortal('employer', 'applicants');
 render($('#head'), pageTitle('Applicants', 'Review applications and move them through the hiring steps.'));
 
@@ -53,8 +55,7 @@ function paintList() {
         ${!d ? html`<p class="muted">Loading...</p>` : html`
           <p class="xs muted">${a.studentEmail} · ${a.studentNumber}</p>
           ${d.coverLetter ? html`<div class="mt-sm"><p class="xs bold">Cover letter</p><p style="white-space:pre-line">${d.coverLetter}</p></div>` : ''}
-          <div class="row-wrap mt-sm">${d.files.length ? d.files.map((f) => html`<button class="btn ghost sm" data-file="${a.applicationId}:${f.fileId}">Download ${f.fileType}: ${f.fileName}</button>`) : html`<span class="xs muted">No files attached.</span>`}</div>
-          <div class="mt-sm"><p class="xs bold">History</p><ul class="xs muted">${d.history.map((h) => html`<li>${fmtDateTime(h.changedAt)} · ${cap(h.status)}${h.changedByRole ? ` by ${h.changedByRole}` : ''}${h.remarks ? ` (${h.remarks})` : ''}</li>`)}</ul></div>`}
+          <div class="row-wrap mt-sm">${d.files.length ? d.files.map((f) => html`<span class="row">${isPdf(f.fileName) ? html`<button class="btn ghost sm" data-view="${a.applicationId}:${f.fileId}">View ${f.fileType}: ${f.fileName}</button>` : ''}<button class="btn ghost sm" data-file="${a.applicationId}:${f.fileId}">Download ${f.fileType}: ${f.fileName}</button></span>`) : html`<span class="xs muted">No files attached.</span>`}</div>          <div class="mt-sm"><p class="xs bold">History</p><ul class="xs muted">${d.history.map((h) => html`<li>${fmtDateTime(h.changedAt)} · ${cap(h.status)}${h.changedByRole ? ` by ${h.changedByRole}` : ''}${h.remarks ? ` (${h.remarks})` : ''}</li>`)}</ul></div>`}
         <div class="row-wrap mt">
           ${(NEXT[a.currentStatus] ?? []).map(([s, label]) => html`<button class="btn primary sm" data-move="${s}" data-id="${a.applicationId}">${label}</button>`)}
           ${a.currentStatus === 'shortlisted' || a.currentStatus === 'interview' ? html`<button class="btn primary sm" data-schedule="${a.applicationId}">${a.currentStatus === 'shortlisted' ? 'Schedule interview' : 'Schedule another round'}</button>` : ''}
@@ -106,6 +107,10 @@ onClick(root, '[data-file]', (b) => {
   const [appId, fileId] = b.dataset.file.split(':');
   const f = details.get(Number(appId)).files.find((x) => x.fileId === Number(fileId));
   downloadFile(`/applications/${appId}/files/${fileId}`, f.fileName).catch((e) => notice($('#message'), errorMessage(e)));
+});
+onClick(root, '[data-view]', (b) => {
+  const [appId, fileId] = b.dataset.view.split(':');
+  viewFile(`/applications/${appId}/files/${fileId}`).catch((e) => notice($('#message'), errorMessage(e)));
 });
 onClick(root, '[data-schedule]', (b) => { const id = Number(b.dataset.schedule); scheduleFor = scheduleFor === id ? null : id; paintList(); });
 root.addEventListener('submit', (e) => {
