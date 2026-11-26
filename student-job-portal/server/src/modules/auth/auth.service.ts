@@ -64,7 +64,12 @@ export async function getCurrentUser(userId: number) {
         }
       : null,
     employer: row.employer_id
-      ? { id: row.employer_id, companyName: row.company_name, verificationStatus: row.verification_status }
+      ? {
+          id: row.employer_id,
+          companyName: row.company_name,
+          verificationStatus: row.verification_status,
+          logoUrl: row.logo_path ? `/avatars/${row.logo_path}` : null,
+        }
       : null,
   };
 }

@@ -10,7 +10,7 @@ import { UpdateProfileInput } from './students.schema';
 const deleteFile = (filePath: string) => fs.promises.rm(filePath, { force: true });
 
 /** The browser declares the file type, which can be faked. Check the first bytes too. */
-async function looksLikeImage(filePath: string, type: 'jpg' | 'png' | 'webp') {
+export async function looksLikeImage(filePath: string, type: 'jpg' | 'png' | 'webp') {
   const handle = await fs.promises.open(filePath, 'r');
   try {
     const buffer = Buffer.alloc(12);

@@ -22,7 +22,9 @@ export interface UserProfileRow {
   employer_id: number | null;
   company_name: string | null;
   verification_status: string | null;
+  logo_path: string | null;
 }
+
 
 export async function findUserByEmail(email: string): Promise<UserRow | undefined> {
   const rows = await query<UserRow>(
@@ -36,7 +38,7 @@ export async function findUserProfile(userId: number): Promise<UserProfileRow | 
   const rows = await query<UserProfileRow>(
     `SELECT u.user_id, u.email, u.role, u.status,
             s.student_id, s.first_name, s.last_name, s.photo_path,
-            e.employer_id, e.company_name, e.verification_status
+            e.employer_id, e.company_name, e.verification_status, e.logo_path
        FROM users u
        LEFT JOIN students  s ON s.user_id = u.user_id
        LEFT JOIN employers e ON e.user_id = u.user_id

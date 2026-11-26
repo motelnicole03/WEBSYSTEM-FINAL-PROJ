@@ -1,0 +1,32 @@
+/* Styles for the employer My Profile and Edit profile pages. */
+
+/* Top card: logo + company name + Edit button */
+.co-head { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; margin-top: 1rem; padding: 1.5rem; }
+.co-info { flex: 1; min-width: 12rem; }
+.co-info h2 { font-size: 1.5rem; font-weight: 600; line-height: 1.3; color: var(--admin-title); overflow-wrap: anywhere; }
+.co-info p { margin-top: .15rem; }
+.co-title-row { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+
+/* The company logo (or the initials when there is no logo yet) */
+.co-logo {
+  display: flex; flex: none; align-items: center; justify-content: center;
+  width: 7rem; height: 7rem; overflow: hidden; border-radius: 1.25rem;
+  background: var(--admin-tile); color: var(--admin-bar); font-size: 2.25rem; font-weight: 600;
+}
+.co-logo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* Two columns: about + open positions on the left, details + contact on the right */
+.co-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 1rem; margin-top: 1rem; align-items: start; }
+.co-col { display: grid; gap: 1rem; min-width: 0; }
+.co-dl { display: grid; gap: .75rem; margin: 0; font-size: .875rem; }
+.co-dl dt { font-size: .75rem; color: var(--admin-muted); }
+.co-dl dd { margin: 0; overflow-wrap: anywhere; }
+.co-text { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .875rem; line-height: 1.7; color: #334155; }
+.co-position { display: flex; justify-content: space-between; align-items: center; gap: .75rem; padding: .75rem 0; border-top: 1px solid var(--line); font-size: .875rem; }
+.co-position:first-child { border-top: 0; padding-top: 0; }
+
+/* Edit page: logo uploader */
+.logo-row { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
+.logo-row .co-logo { width: 5.5rem; height: 5.5rem; font-size: 1.75rem; }
+
+@media (max-width: 900px) { .co-grid { grid-template-columns: 1fr; } }

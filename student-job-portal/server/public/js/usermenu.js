@@ -18,12 +18,13 @@ function menuItems(user) {
       ['/settings.html', 'Settings'],
     ];
   }
-  return user.role === 'employer' ? [['/employer/index.html', 'Dashboard']] : [['/admin/index.html', 'Admin dashboard']];
+    if (user.role === 'employer') return [['/employer/index.html', 'Dashboard'], ['/employer/profile.html', 'My Profile']];
+  return [['/admin/index.html', 'Admin dashboard']];
 }
 
 // The round button in the navbar: the student's photo if they have one, otherwise their initials
 function avatarContent(user, name) {
-  const url = user.student?.photoUrl;
+    const url = user.student?.photoUrl ?? user.employer?.logoUrl;
   return url
     ? html`<img src="${url}" alt="" style="display:block;width:100%;height:100%;border-radius:50%;object-fit:cover">`
     : initials(name);
