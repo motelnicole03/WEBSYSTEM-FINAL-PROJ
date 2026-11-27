@@ -2,7 +2,7 @@ import { api, errorMessage } from './api.js';
 import { openChat } from './chat.js';
 import { mountSite } from './layout.js';
 import { requireRole } from './auth.js';
-import { $, fmtDate, fmtDateTime, html, notice, onClick, render, statusPill } from './ui.js';
+import { $, fmtDate, fmtDateTime, html, internPill, notice, onClick, render, statusPill } from './ui.js';
 
 await requireRole(['student']);
 await mountSite({});
@@ -36,11 +36,12 @@ function paint() {
     <div class="row-wrap between" style="align-items:flex-start">
       <div><a href="/jobs.html?id=${a.opportunityId}" style="font-weight:500">${a.title}</a>
         <p class="muted xs">${a.companyName} &middot; Applied ${fmtDate(a.submittedAt)}</p></div>
-      ${statusPill(a.currentStatus)}
+      <span class="row">${a.internshipStatus ? internPill(a.internshipStatus) : ''}${statusPill(a.currentStatus)}</span>
     </div>
     ${a.currentStatus === 'offered' ? html`<p class="notice ok xs">You have an offer. Accept it to be marked as hired, or decline it.</p>` : ''}
     <div class="row-wrap mt">
       <button class="btn ghost sm" data-chat="${a.applicationId}" style="color:var(--brand)">Message</button>
+      ${a.certificateId ? html`<a class="btn primary sm" href="/certificate.html?id=${a.applicationId}">View certificate</a>` : ''}
       ${a.currentStatus === 'offered' ? html`<button class="btn primary sm" data-act="accept" data-id="${a.applicationId}">Accept offer</button><button class="btn ghost sm" data-act="decline" data-id="${a.applicationId}">Decline</button>` : ''}
       ${ACTIVE.includes(a.currentStatus) && a.currentStatus !== 'offered' ? html`<button class="btn ghost sm muted" data-act="withdraw" data-id="${a.applicationId}">Withdraw</button>` : ''}
     </div></article>`)}`

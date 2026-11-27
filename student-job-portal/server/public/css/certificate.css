@@ -1,0 +1,30 @@
+/* Certificate of completion. Landscape page, prints to one sheet. */
+body.cert-page { background: #f1f5f9; min-height: 100vh; }
+.cert-toolbar { display: flex; justify-content: space-between; max-width: 60rem; margin: 0 auto; padding: 1rem; }
+
+.certificate { position: relative; max-width: 60rem; margin: .5rem auto 2rem; aspect-ratio: 1.414 / 1; background: #fffdf8; padding: 1.25rem; box-shadow: 0 10px 30px rgba(0,0,0,.12); }
+.certificate .frame { height: 100%; border: 6px double var(--brand); padding: 2.5rem 3rem; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.certificate .org { letter-spacing: .3em; font-size: .75rem; font-weight: 600; color: var(--brand); }
+.certificate h1 { font-family: "Playfair Display", Georgia, serif; font-size: 2.6rem; font-weight: 700; color: var(--brand-dark); margin-top: .75rem; line-height: 1.15; }
+.certificate .lead { margin-top: 1.25rem; font-size: .9rem; color: var(--muted); }
+.certificate .name { font-family: "Playfair Display", Georgia, serif; font-size: 2.2rem; font-weight: 500; margin: .5rem 0; padding: 0 2rem .25rem; border-bottom: 2px solid var(--brand); color: var(--ink); }
+.certificate .body { max-width: 42rem; font-size: .95rem; line-height: 1.7; }
+.certificate .remarks { margin-top: .75rem; font-style: italic; color: var(--muted); font-size: .85rem; }
+.certificate .foot { margin-top: auto; width: 100%; display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; font-size: .75rem; }
+.certificate .sign { min-width: 13rem; }
+.certificate .sign .line { border-top: 1px solid var(--ink); padding-top: .25rem; font-weight: 600; }
+.certificate .meta { text-align: right; color: var(--muted); }
+
+@media (max-width: 700px) {
+  .certificate { aspect-ratio: auto; }
+  .certificate .frame { padding: 1.5rem 1rem; }
+  .certificate h1 { font-size: 1.7rem; } .certificate .name { font-size: 1.5rem; }
+  .certificate .foot { flex-direction: column; align-items: center; margin-top: 2rem; } .certificate .meta { text-align: center; }
+}
+
+@media print {
+  @page { size: A4 landscape; margin: 0; }
+  body.cert-page { background: #fff; }
+  .no-print { display: none !important; }
+  .certificate { max-width: none; width: 100vw; height: 100vh; margin: 0; box-shadow: none; aspect-ratio: auto; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

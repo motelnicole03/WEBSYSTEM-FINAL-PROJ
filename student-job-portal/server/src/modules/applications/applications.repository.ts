@@ -117,10 +117,14 @@ export async function findApplication(id: number): Promise<ApplicationRow | unde
 export async function listByStudent(studentId: number) {
   return query(
     `SELECT a.application_id, a.current_status, a.submitted_at,
-            o.opportunity_id, o.title, o.type, e.company_name
+            o.opportunity_id, o.title, o.type, e.company_name,
+            CASE WHEN a.current_status = 'hired' AND o.type IN ('internship', 'ojt')
+                 THEN a.internship_status END AS internship_status,
+            c.certificate_id
        FROM applications a
        JOIN opportunities o ON o.opportunity_id = a.opportunity_id
        JOIN employers e     ON e.employer_id = o.employer_id
+       LEFT JOIN certificates c ON c.application_id = a.application_id
       WHERE a.student_id = $1
       ORDER BY a.submitted_at DESC`,
     [studentId],

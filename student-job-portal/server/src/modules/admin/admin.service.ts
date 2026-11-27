@@ -13,3 +13,13 @@ export async function setVerification(admin: TokenPayload, employerId: number, s
   await logActivity(admin.userId, status === 'verified' ? 'approved' : 'rejected', 'company', employerId, String(employer.company_name));
   return camelize(employer);
 }
+
+export async function listStudents(search?: string, status?: repo.StudentStatusFilter) {
+  return camelize(await repo.listStudents(search, status));
+}
+
+export async function getStudent(studentId: number) {
+  const student = await repo.findStudent(studentId);
+  if (!student) throw HttpError.notFound('Student not found');
+  return { ...camelize<object>(student), applications: camelize(await repo.listStudentApplications(studentId)) };
+}

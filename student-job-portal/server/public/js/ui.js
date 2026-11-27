@@ -94,6 +94,14 @@ export function oppStatusPill(status) {
   return html`<span class="pill ${cls}">${label}</span>`;
 }
 
+const INTERN_STATUS = {
+  ongoing: ['Ongoing', 'blue'], completed: ['Completed', 'green'], removed: ['Removed', 'red'], none: ['No internship', 'gray'],
+};
+export function internPill(status) {
+  const [label, cls] = INTERN_STATUS[status ?? 'none'] ?? [status, ''];
+  return html`<span class="pill ${cls}">${label}</span>`;
+}
+
 // ---------- icons ----------
 
 const svg = (path, size = 18, fill = 'none') =>

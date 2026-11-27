@@ -63,6 +63,7 @@ const NAV = {
       ['/employer/jobs.html', 'Job Posts', 'jobs'],
       ['/employer/applicants.html', 'Applicants', 'applicants'],
       ['/employer/interviews.html', 'Interviews', 'interviews'],
+      ['/employer/interns.html', 'Interns', 'interns'],
       ['/employer/messages.html', 'Messages', 'messages'],
     ],
   },
@@ -70,7 +71,7 @@ const NAV = {
     label: 'ADMIN PORTAL',
     items: [
       ['/admin/index.html', 'Dashboard', 'dashboard'],
-      ['/admin/coming-soon.html?key=students&title=Student%20Management&note=Listing%20and%20suspending%20students%20needs%20new%20backend%20endpoints.', 'Student Management', 'students'],
+      ['/admin/students.html', 'Student Management', 'students'],
       ['/admin/jobs.html', 'Job Management', 'jobs'],
       ['/admin/reports.html', 'Reports & Analytics', 'reports'],
       ['/admin/settings.html', 'Settings', 'settings'],

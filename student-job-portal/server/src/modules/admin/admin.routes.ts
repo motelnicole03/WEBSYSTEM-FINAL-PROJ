@@ -12,4 +12,8 @@ router.get('/employers', controller.listEmployers); // ?status=pending|verified|
 router.post('/employers/:id/verify', controller.verifyEmployer);
 router.post('/employers/:id/reject', controller.rejectEmployer);
 
+// Student list with internship status (read-only)
+router.get('/students', controller.listStudents); // ?search=&status=ongoing|completed|removed|none
+router.get('/students/:id', controller.getStudent);
+
 export default router;
