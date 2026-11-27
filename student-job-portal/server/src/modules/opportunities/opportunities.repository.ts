@@ -253,7 +253,18 @@ export async function replaceSkills(client: PoolClient, opportunityId: number, s
 export async function setStatus(id: number, status: OpportunityStatus) {
   await query('UPDATE opportunities SET status = $1 WHERE opportunity_id = $2', [status, id]);
 }
+export async function countApplications(opportunityId: number): Promise<number> {
+  const rows = await query<{ count: number }>(
+    'SELECT COUNT(*)::int AS count FROM applications WHERE opportunity_id = $1',
+    [opportunityId],
+  );
+  return rows[0].count;
+}
 
+/** Saved bookmarks, skills and view history go with it (ON DELETE CASCADE / SET NULL). */
+export async function deleteOpportunity(id: number) {
+  await query('DELETE FROM opportunities WHERE opportunity_id = $1', [id]);
+}
 // ---------- saved opportunities and analytics ----------
 
 export async function saveOpportunity(studentId: number, opportunityId: number) {

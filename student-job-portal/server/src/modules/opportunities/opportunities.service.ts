@@ -150,13 +150,29 @@ export async function submit(user: TokenPayload, id: number) {
   return getOne(id, user);
 }
 
+/** Closes a posting. A filled one can be closed too, for when the company is done hiring for good. */
 export async function close(user: TokenPayload, id: number) {
   const opportunity = await getOwnedOrThrow(user, id);
-  if (opportunity.status === 'closed' || opportunity.status === 'filled') {
+  if (opportunity.status === 'closed') {
     throw HttpError.conflict('This opportunity is already closed');
   }
   await repo.setStatus(id, 'closed');
   return getOne(id, user);
+}
+
+/**
+ * Deletes a draft that was never published. Anything that was ever live is closed instead,
+ * so its applicants and history are kept.
+ */
+export async function remove(user: TokenPayload, id: number) {
+  const opportunity = await getOwnedOrThrow(user, id);
+  if (opportunity.status !== 'draft') {
+    throw HttpError.conflict('Only drafts can be deleted. Close the posting instead.');
+  }
+  if ((await repo.countApplications(id)) > 0) {
+    throw HttpError.conflict('This posting already has applicants, so it cannot be deleted');
+  }
+  await repo.deleteOpportunity(id);
 }
 
 export async function listMine(user: TokenPayload) {

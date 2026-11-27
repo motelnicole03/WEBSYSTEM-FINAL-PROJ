@@ -21,16 +21,23 @@ async function load() {
           ${r.status === 'open' ? html`<a class="btn ghost sm" href="/jobs.html?id=${r.opportunityId}">View live</a>` : ''}
           ${editable ? html`<a class="btn ghost sm" href="/employer/job-form.html?id=${r.opportunityId}">Edit</a>` : ''}
           ${r.status === 'draft' ? html`<button class="btn primary sm" data-act="submit" data-id="${r.opportunityId}">Submit for approval</button>` : ''}
-          ${r.status === 'open' ? html`<button class="btn ghost sm" data-act="close" data-id="${r.opportunityId}">Close</button>` : ''}
-        </div></article>`;
+          ${r.status === 'open' || r.status === 'filled' ? html`<button class="btn ghost sm" data-act="close" data-id="${r.opportunityId}" data-status="${r.status}">Close</button>` : ''}
+          ${r.status === 'draft' ? html`<button class="btn ghost sm" data-act="delete" data-id="${r.opportunityId}" style="color:var(--admin-number)">Delete</button>` : ''}        </div></article>`;
     })}` : html`<p class="small muted">No postings yet.</p>`);
   } catch (e) { notice($('#message'), errorMessage(e)); }
 }
 
 onClick($('#list'), '[data-act]', async (b) => {
-  const { act, id } = b.dataset;
-  if (act === 'close' && !confirm('Close this posting? Students will no longer be able to apply.')) return;
+  const { act, id, status } = b.dataset;
+  if (act === 'close' && !confirm(status === 'filled'
+    ? 'Mark this filled posting as closed? Students already cannot apply to it. Its applicants and interns are kept.'
+    : 'Close this posting? Students will no longer be able to apply.')) return;
+  if (act === 'delete' && !confirm('Delete this draft? This cannot be undone.')) return;
   notice($('#message'), '');
-  try { await api.post(`/opportunities/${id}/${act}`); await load(); } catch (e) { notice($('#message'), errorMessage(e)); }
+  try {
+    if (act === 'delete') await api.delete(`/opportunities/${id}`);
+    else await api.post(`/opportunities/${id}/${act}`);
+    await load();
+  } catch (e) { notice($('#message'), errorMessage(e)); }
 });
 load();

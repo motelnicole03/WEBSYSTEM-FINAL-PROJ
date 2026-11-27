@@ -32,6 +32,11 @@ export const close = asyncHandler(async (req: Request, res: Response) => {
   res.json(await service.close(req.user!, parseId(req.params.id)));
 });
 
+export const remove = asyncHandler(async (req: Request, res: Response) => {
+  await service.remove(req.user!, parseId(req.params.id));
+  res.status(204).end();
+
+});
 export const mine = asyncHandler(async (req: Request, res: Response) => {
   res.json(await service.listMine(req.user!));
 });

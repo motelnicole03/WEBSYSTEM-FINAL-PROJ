@@ -25,6 +25,7 @@ router.post('/', ...employerOnly, validateBody(createOpportunitySchema), control
 router.patch('/:id', ...employerOnly, validateBody(updateOpportunitySchema), controller.update);
 router.post('/:id/submit', ...employerOnly, controller.submit);
 router.post('/:id/close', ...employerOnly, controller.close);
+router.delete('/:id', ...employerOnly, controller.remove); // drafts only
 
 // Admin: moderate postings
 router.post('/:id/approve', ...adminOnly, controller.approve);
