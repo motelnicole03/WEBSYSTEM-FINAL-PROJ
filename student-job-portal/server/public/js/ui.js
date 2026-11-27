@@ -1,3 +1,4 @@
+import './password-toggle.js'; // the "show password" eye on every password box
 // Small helpers shared by every page.
 //
 // SECURITY: text from the database (names, titles, messages) is untrusted. The html`` helper
