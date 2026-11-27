@@ -48,8 +48,7 @@
     </section>
 
     <h2 class="section-title" id="catalog">Programs &amp; Skills</h2>
-    <div class="form-grid" style="grid-template-columns:repeat(auto-fit,minmax(20rem,1fr));margin-top:.75rem;align-items:start">
-      <section class="panel">
+    <div class="form-grid" style="grid-template-columns:repeat(auto-fit,minmax(20rem,1fr));margin-top:.75rem">      <section class="panel">
         <p class="bold">Programs</p>
         <p class="muted small mt-sm">These appear in the Program dropdown when students sign up.</p>
         <div id="programs" class="mt-sm"></div>
@@ -73,25 +72,18 @@
     </div>
 
         <h2 class="section-title" id="blocked">Blocked &amp; removed</h2>
-    <p class="sub">Companies and students you blocked or removed. Restore them any time.</p>
-    <section class="panel" style="margin-top:.75rem">
-      <p class="bold">Find an account</p>
-      <p class="muted small mt-sm">Search by name, email, student number or company name, then block or remove it.</p>
-      <form id="find-form" class="row-wrap mt-sm" novalidate>
-        <input class="input" name="q" placeholder="Search students or companies" aria-label="Search accounts" style="flex:1;min-width:12rem">
-        <button class="btn primary">Search</button>
+      <p class="sub">Block a company you approved, and unblock it any time. Companies you rejected are listed as removed.</p>    <section class="panel" style="margin-top:.75rem">
+      <p class="bold">Find an approved company</p>
+      <p class="muted small mt-sm">Search by company name or email, then block it.</p>      <form id="find-form" class="row-wrap mt-sm" novalidate>
+      <input class="input" name="q" placeholder="Search approved companies" aria-label="Search approved companies" style="flex:1;min-width:12rem">        <button class="btn primary">Search</button>
       </form>
       <div id="find-results" class="mt-sm"></div>
       <p id="find-msg" class="small mt-sm"></p>
 
-      <p class="bold" style="margin-top:1.5rem">Blocked and removed accounts</p>
-      <div id="restricted-filters" class="chips mt-sm">
+      <p class="bold" style="margin-top:1.5rem">Blocked and removed companies</p>      <div id="restricted-filters" class="chips mt-sm">
         <button type="button" class="chip" data-rfilter="all" aria-pressed="true">All</button>
-        <button type="button" class="chip" data-rfilter="employer" aria-pressed="false">Companies</button>
-        <button type="button" class="chip" data-rfilter="student" aria-pressed="false">Students</button>
-        <button type="button" class="chip" data-rfilter="suspended" aria-pressed="false">Blocked only</button>
-        <button type="button" class="chip" data-rfilter="inactive" aria-pressed="false">Removed only</button>
-      </div>
+        <button type="button" class="chip" data-rfilter="blocked" aria-pressed="false">Blocked</button>
+        <button type="button" class="chip" data-rfilter="removed" aria-pressed="false">Rejected</button>      </div>
       <div id="restricted" class="mt-sm"></div>
     </section>
 
@@ -102,7 +94,6 @@
         <div id="activity-filters" class="chips">
           <button type="button" class="chip" data-afilter="all" aria-pressed="true">All</button>
           <button type="button" class="chip" data-afilter="company" aria-pressed="false">Companies</button>
-          <button type="button" class="chip" data-afilter="student" aria-pressed="false">Students</button>
           <button type="button" class="chip" data-afilter="job" aria-pressed="false">Job posts</button>
         </div>
         <select id="activity-days" class="input" style="width:auto" aria-label="Time range">

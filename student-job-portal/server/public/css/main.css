@@ -186,6 +186,7 @@ table.data td { padding: .5rem .5rem .5rem 0; border-top: 1px solid var(--line);
 .tab.active { background: var(--brand); border-color: var(--brand); color: #fff; }
 .panel { padding: 1.25rem; background: #fff; border: 1px solid var(--line); border-radius: 1rem; }
 .panel + .panel, .item + .item { margin-top: .75rem; }
+.form-grid > .panel + .panel { margin-top: 0; } /* side by side in a grid: no extra gap on top */
 .item { padding: 1rem; background: #fff; border: 1px solid var(--line); border-radius: .75rem; }
 .progress { height: .5rem; overflow: hidden; border-radius: 999px; background: #f1f5f9; }
 .progress > div { height: 100%; background: var(--brand); transition: width .3s; }

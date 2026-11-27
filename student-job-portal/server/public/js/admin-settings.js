@@ -141,38 +141,42 @@ $('#report-form').addEventListener('submit', async (e) => {
 });
 
 // ---------- blocked & removed ----------
-const STATUS = { active: ['green', 'Active'], pending: ['amber', 'Pending'], suspended: ['amber', 'Blocked'], inactive: ['gray', 'Removed'] };
-const statusPill = (status) => { const [tone, label] = STATUS[status] ?? STATUS.active; return html`<span class="pill ${tone}">${label}</span>`; };
-const typeLabel = (a) => (a.role === 'employer' ? 'Company' : 'Student');
+// Only companies are listed here. blocked = an approved company the admin blocked,
+// removed = a company the admin rejected (or removed earlier).
+const RESTRICTION = { blocked: ['amber', 'Blocked'], removed: ['gray', 'Removed'] };
+const statusPill = (a) => { const [tone, label] = RESTRICTION[a.restriction] ?? ['green', 'Active']; return html`<span class="pill ${tone}">${label}</span>`; };
 const shortDate = (iso) => (iso ? new Date(iso).toLocaleDateString(undefined, { dateStyle: 'medium' }) : '');
 const whenLong = (iso) => new Date(iso).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
-const isRestricted = (a) => a.status === 'suspended' || a.status === 'inactive';
+const wasRejected = (a) => a.verificationStatus === 'rejected';
 
 let restricted = [], found = [], lastQuery = '', rfilter = 'all';
 let activity = [], afilter = 'all';
 
-const accountActions = (a) => (isRestricted(a)
-  ? html`<button class="btn ghost sm" data-restore="${a.userId}">${a.status === 'suspended' ? 'Unblock' : 'Restore'}</button>`
-  : html`<button class="btn ghost sm" data-block="${a.userId}">Block</button><button class="btn ghost sm" data-remove="${a.userId}">Remove</button>`);
+// An approved company can be blocked, a blocked one can be unblocked.
+// A rejected company has no button: it was declined in Company verification.
+const accountActions = (a) => {
+  if (a.restriction === 'blocked') return html`<button class="btn ghost sm" data-restore="${a.userId}">Unblock</button>`;
+  if (a.restriction === 'removed') return wasRejected(a) ? html`` : html`<button class="btn ghost sm" data-restore="${a.userId}">Restore</button>`;
+  return html`<button class="btn ghost sm" data-block="${a.userId}">Block</button>`;
+};
 
 function paintFound() {
   render($('#find-results'), !lastQuery ? html`` : found.length
     ? html`${found.map((a) => html`<div class="set-row">
-        <div class="small"><p>${a.name} <span class="muted xs">&middot; ${typeLabel(a)}</span></p>
-          <p class="muted xs">${a.email}${a.studentNumber ? ` · ${a.studentNumber}` : ''}</p></div>
-        <div class="row">${statusPill(a.status)}${accountActions(a)}</div>
+        <div class="small"><p>${a.name}</p><p class="muted xs">${a.email}</p></div>
+        <div class="row">${statusPill(a)}${accountActions(a)}</div>
       </div>`)}`
-    : html`<p class="muted small">No matching accounts.</p>`);
+    : html`<p class="muted small">No approved company matches that.</p>`);
 }
 
 function paintRestricted() {
-  const shown = restricted.filter((a) => rfilter === 'all' || a.role === rfilter || a.status === rfilter);
+  const shown = restricted.filter((a) => rfilter === 'all' || a.restriction === rfilter);
   render($('#restricted'), shown.length
     ? html`${shown.map((a) => html`<div class="set-row" style="align-items:flex-start">
-        <div class="small" style="min-width:0;flex:1"><p><b>${a.name}</b> <span class="muted xs">&middot; ${typeLabel(a)}</span></p>
+        <div class="small" style="min-width:0;flex:1"><p><b>${a.name}</b></p>
           <p class="muted xs">${a.email}</p>
-          ${a.restrictionReason ? html`<p class="muted xs">Reason: ${a.restrictionReason}</p>` : ''}</div>
-        <div class="small" style="width:8rem">${statusPill(a.status)}<p class="muted xs" style="margin-top:.25rem">${shortDate(a.restrictedAt)}</p></div>
+          ${a.restrictionReason ? html`<p class="muted xs">Reason: ${a.restrictionReason}</p>` : (wasRejected(a) ? html`<p class="muted xs">Rejected during company verification</p>` : '')}</div>
+        <div class="small" style="width:8rem">${statusPill(a)}<p class="muted xs" style="margin-top:.25rem">${shortDate(a.restrictedAt)}</p></div>
         ${accountActions(a)}
       </div>`)}`
     : html`<p class="muted small">Nothing here.</p>`);

@@ -10,23 +10,45 @@ const ACCOUNT_SELECT = `
 
 const escapeLike = (text: string) => text.replace(/[\\%_]/g, '\\$&');
 
+
+// Only companies are listed in Settings > Blocked & removed. The admin does not approve students.
+// restriction: 'blocked' = an approved company the admin blocked,
+//              'removed' = a company the admin rejected (or removed before), null = fine.
+const COMPANY_FIELDS = `
+  u.user_id, e.employer_id, u.role, u.email, u.status, e.verification_status,
+  u.restriction_reason, e.company_name AS name,
+  CASE WHEN u.status = 'suspended' THEN 'blocked'
+       WHEN u.status = 'inactive' OR e.verification_status = 'rejected' THEN 'removed'
+  END AS restriction`;
+
+/** Approved (verified) companies that match the text, so the admin can block one. */
 export function searchAccounts(text: string) {
   return query(
-    `${ACCOUNT_SELECT}
-      WHERE u.role IN ('student', 'employer')
-        AND (u.email ILIKE $1 OR s.student_number ILIKE $1 OR e.company_name ILIKE $1
-             OR CONCAT(s.first_name, ' ', s.last_name) ILIKE $1)
-      ORDER BY name
+    `SELECT ${COMPANY_FIELDS}
+       FROM users u
+       JOIN employers e ON e.user_id = u.user_id
+      WHERE e.verification_status = 'verified'
+        AND (u.email ILIKE $1 OR e.company_name ILIKE $1)
+      ORDER BY e.company_name
       LIMIT 8`,
     [`%${escapeLike(text)}%`],
   );
 }
 
+/** Blocked companies and removed ones (rejected by the admin), newest first. */
 export function listRestricted() {
   return query(
-    `${ACCOUNT_SELECT}
-      WHERE u.role IN ('student', 'employer') AND u.status IN ('suspended', 'inactive')
-      ORDER BY u.restricted_at DESC NULLS LAST, u.user_id DESC`,
+    `SELECT * FROM (
+       SELECT ${COMPANY_FIELDS},
+              COALESCE(u.restricted_at,
+                       (SELECT MAX(al.created_at) FROM activity_logs al
+                         WHERE al.action = 'rejected' AND al.target_type = 'company'
+                           AND al.target_id = e.employer_id)) AS restricted_at
+         FROM users u
+         JOIN employers e ON e.user_id = u.user_id
+     ) c
+     WHERE c.restriction IS NOT NULL
+     ORDER BY c.restricted_at DESC NULLS LAST, c.user_id DESC`,
   );
 }
 

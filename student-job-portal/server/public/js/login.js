@@ -7,8 +7,8 @@ await mountSite({});
 
 $('#login-form').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const button = $('button', e.currentTarget);
-  const form = new FormData(e.currentTarget);
+  // The Login button, not the eye button of the password box (that one is type="button")
+  const button = $('button:not([type="button"])', e.currentTarget);  const form = new FormData(e.currentTarget);
   button.disabled = true;
   button.textContent = 'Logging in...';
   notice($('#message'), '');
